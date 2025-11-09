@@ -42,7 +42,7 @@ export default function HomePage() {
 </a>
 
 <a
-  href="tel:084860482"
+  href="tel:0485876988"
   className="border-2 border-[#B51E1E] text-[#B51E1E] px-8 py-4 rounded-full text-lg font-semibold transition-transform duration-100 ease-in-out hover:bg-[#B51E1E] hover:text-white active:scale-90"
 >
   Commander

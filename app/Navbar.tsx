@@ -1,5 +1,6 @@
 "use client";
 
+import CartIcon from "./components/carticon";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -78,8 +79,6 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   className="absolute left-1/2 -translate-x-1/2 mt-3 bg-white text-[#b12c20] shadow-lg rounded-lg py-2 w-60 max-h-96 overflow-y-auto border border-gray-100"
-                  style={{ scrollbarWidth: "thin", scrollbarColor: "#b12c20 #f1f1f1" }}
-                  onWheel={(e) => e.stopPropagation()} // empêche le scroll du fond
                 >
                   {categories.map(([name, id]) => (
                     <button
@@ -95,13 +94,9 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
 
-          {/* Bouton Commander */}
-          <a
-            href="tel:084860482"
-            className="hover:text-[#b12c20] transition"
-          >
-            Commander
-          </a>
+          {/* Icône panier */}
+          <CartIcon />
+
         </div>
 
         {/* --- Téléphone --- */}
@@ -109,14 +104,8 @@ export default function Navbar() {
           <Link href="/" className="text-black hover:text-[#b12c20] transition">
             Accueil
           </Link>
-
-          <a
-            href="tel:084860482"
-            className="text-black hover:text-[#b12c20] transition"
-          >
-            Commander
-          </a>
-
+          
+          <CartIcon />
           <button
             onClick={toggleMobileMenu}
             className="text-[#b12c20] focus:outline-none"
@@ -124,21 +113,6 @@ export default function Navbar() {
             {menuOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
-        <script
-  dangerouslySetInnerHTML={{
-    __html: `
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll('a, button').forEach(el => {
-          if (el.textContent.trim().toLowerCase() === "commander") {
-            el.setAttribute("href", "tel:084860482");
-            el.onclick = () => window.location.href = "tel:084860482";
-          }
-        });
-      });
-    `,
-  }}
-/>
-
       </nav>
 
       {/* --- Menu déroulant mobile (beige foncé) --- */}
