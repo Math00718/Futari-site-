@@ -7,71 +7,101 @@ export default function PanierPage() {
   const { items, totalPrice, inc, dec, clear } = useCart();
   const list = Object.values(items);
 
+  const Ticket = ({ children }: { children: React.ReactNode }) => (
+    <div
+      style={{
+        backgroundColor: "#fff",
+        width: "100%",
+        maxWidth: 420,
+        padding: "40px 20px 50px",
+        borderRadius: 12,
+        boxShadow:
+          "0 0 0 1px #e6e6e6 inset, 0 6px 14px rgba(0,0,0,0.1)",
+        fontFamily: "monospace",
+        overflow: "hidden",
+      }}
+    >
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: 28,
+          fontWeight: 700,
+          color: "#B51E1E",
+          marginBottom: 12,
+        }}
+      >
+        Futari
+      </h1>
+      <p
+        style={{
+          textAlign: "center",
+          color: "#555",
+          fontSize: 14,
+          marginBottom: 20,
+        }}
+      >
+        Commande
+      </p>
+      {children}
+    </div>
+  );
+
+  // --- Si panier vide ---
   if (list.length === 0) {
     return (
-      <main style={{ maxWidth: 720, margin: "40px auto", padding: "0 16px" }}>
-        <h1>Panier</h1>
-        <p>Ajoutez des plats à votre panier.</p>
-        <Link
-          href="/menu"
-          style={{
-            display: "inline-block",
-            padding: "10px 16px",
-            border: "1px solid #222",
-            borderRadius: 8,
-          }}
-        >
-          Voir le menu
-        </Link>
+      <main
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          padding: "40px 16px",
+          background: "transparent", // plus de fond beige
+          minHeight: "100vh",
+        }}
+      >
+        <Ticket>
+          <p
+            style={{
+              textAlign: "center",
+              color: "#777",
+              fontSize: 15,
+              marginBottom: 24,
+            }}
+          >
+            Vous n’avez encore rien ajouté à votre commande.
+          </p>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Link
+              href="/menu"
+              style={{
+                display: "inline-block",
+                padding: "12px 20px",
+                border: "1px solid #222",
+                borderRadius: 8,
+                textDecoration: "none",
+                color: "#111",
+                fontWeight: 600,
+              }}
+            >
+              Voir le menu
+            </Link>
+          </div>
+        </Ticket>
       </main>
     );
   }
 
+  // --- Si panier contient des éléments ---
   return (
     <main
       style={{
         display: "flex",
         justifyContent: "center",
         padding: "40px 16px",
-        backgroundColor: "transparent",   // ← important: plus de bande blanche
+        background: "transparent", // plus de fond beige
         minHeight: "100vh",
       }}
     >
-      <div
-        style={{
-          backgroundColor: "#fff",
-          width: "100%",
-          maxWidth: 420,
-          padding: "40px 20px 50px",
-          borderRadius: 12,
-          boxShadow: "0 0 0 1px #e6e6e6 inset, 0 6px 14px rgba(0,0,0,0.1)",
-          fontFamily: "monospace",
-          overflow: "hidden",
-        }}
-      >
-        <h1
-          style={{
-            textAlign: "center",
-            fontSize: 28,
-            fontWeight: 700,
-            color: "#B51E1E",
-            marginBottom: 12,
-          }}
-        >
-          Futari
-        </h1>
-
-        <p
-          style={{
-            textAlign: "center",
-            color: "#555",
-            fontSize: 14,
-            marginBottom: 20,
-          }}
-        >
-          Commande
-        </p>
-
+      <Ticket>
         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
           {list.map((item) => (
             <li
@@ -94,7 +124,6 @@ export default function PanierPage() {
                   </div>
                 )}
               </div>
-
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <QuantityControl
                   value={item.qty}
@@ -161,7 +190,7 @@ export default function PanierPage() {
             Vider le panier
           </button>
         </div>
-      </div>
+      </Ticket>
     </main>
   );
 }
