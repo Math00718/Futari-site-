@@ -34,8 +34,7 @@ export default function HomePage() {
         <p className="text-base md:text-lg text-gray-700 max-w-md mb-10">
           Choisissez vos plats dans le <strong>menu</strong>, ajoutez-les à votre
           <strong> panier</strong>, puis appuyez sur{" "}
-          <strong>“Commander par téléphone”</strong> pour lire votre commande et
-          la valider directement avec l'établissement.
+          <strong>“Commander par téléphone”</strong> pour appeler l'établissemnt et passer votre commande.
         </p>
 
         <div className="flex flex-col md:flex-row gap-4">

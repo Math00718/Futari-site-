@@ -7,18 +7,20 @@ export default function PanierPage() {
   const { items, totalPrice, inc, dec, clear } = useCart();
   const list = Object.values(items);
 
+  // --- Composant Ticket ---
   const Ticket = ({ children }: { children: React.ReactNode }) => (
     <div
       style={{
         backgroundColor: "#fff",
         width: "100%",
         maxWidth: 420,
-        padding: "40px 20px 50px",
+        padding: "40px 20px",
         borderRadius: 12,
         boxShadow:
           "0 0 0 1px #e6e6e6 inset, 0 6px 14px rgba(0,0,0,0.1)",
         fontFamily: "monospace",
         overflow: "hidden",
+        margin: "auto", // centre le ticket verticalement si contenu court
       }}
     >
       <h1
@@ -53,9 +55,10 @@ export default function PanierPage() {
         style={{
           display: "flex",
           justifyContent: "center",
-          padding: "40px 16px",
-          background: "transparent", // plus de fond beige
-          minHeight: "100vh",
+          alignItems: "flex-start",
+          paddingTop: 60,
+          paddingBottom: 60,
+          background: "transparent",
         }}
       >
         <Ticket>
@@ -96,9 +99,10 @@ export default function PanierPage() {
       style={{
         display: "flex",
         justifyContent: "center",
-        padding: "40px 16px",
-        background: "transparent", // plus de fond beige
-        minHeight: "100vh",
+        alignItems: "flex-start",
+        paddingTop: 60,
+        paddingBottom: 60,
+        background: "transparent",
       }}
     >
       <Ticket>
@@ -115,8 +119,9 @@ export default function PanierPage() {
               }}
             >
               <div style={{ maxWidth: "60%" }}>
+                {/* suppression de l'affichage de l'id */}
                 <div style={{ fontWeight: 600, fontSize: 14 }}>
-                  {`${item.id} – ${item.name}`}
+                  {item.name}
                 </div>
                 {typeof item.price === "number" && (
                   <div style={{ color: "#666", fontSize: 12 }}>

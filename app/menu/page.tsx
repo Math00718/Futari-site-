@@ -2,10 +2,16 @@
 import Image from "next/image";
 import { useCart } from "../context/cartcontext";
 import QuantityControl from "../components/quantitycontrol";
+import { useState } from "react";
+import MenuItem from "../components/menuitem";
+import VariantModal from "../components/VariantModal";
+
+
 // @ts-nocheck
 
 export default function MenuPage() {
   const { items, inc, dec } = useCart();
+const [openModal, setOpenModal] = useState<string | null>(null);
 
   return (
     <main
@@ -67,21 +73,21 @@ export default function MenuPage() {
         id: "plateau-osaka",
         name: "Plateau Osaka (67 pcs)",
         desc: "3 Ikura Flower • 8 Nigiri saumon • 4 Nigiri crevette • 6 Nigiri thon • 6 Nigiri dorade • 8 Maki saumon • 8 Maki concombre • 8 Maki thon • 8 Maki Cali saumon avocat • 8 Spring Roll saumon avocat",
-        price: 66.0,
+        price: 68.0,
         img: "/menu/plateau-osaka.jpg",
       },
       {
         id: "plateau-fuji",
         name: "Plateau Fuji (70 pcs)",
         desc: "7 Nigiri thon • 7 Nigiri saumon • 8 Maki thon • 8 Maki saumon • 8 Crunch Thon Roll • 8 Crunch Saumon Roll • 16 Maki Cali saumon avocat • 8 Spring Roll saumon avocat",
-        price: 68.0,
+        price: 66.0,
         img: "/menu/plateau-fuji.jpg",
       },
       {
         id: "menu-crevette",
-        name: "Menu Crevette (24 pcs)",
-        desc: "8 Maki Cali crevette avocat • 8 Spring Roll crevette • 8 Maki crevette cheese",
-        price: 21.9,
+        name: "Menu Crevette (28 pcs)",
+        desc: "4 Nigiri crevette • 8 Maki crevette • 8 Maki California crevette • 8 Spring Roll crevette",
+        price: 21.4,
         img: "/menu/menu-crevette.jpg",
       },
       // Menus M1 à M10
@@ -124,7 +130,7 @@ export default function MenuPage() {
         id: "m6",
         name: "M6 (28 pcs)",
         desc: "4 Nigiri saumon • 8 Maki saumon • 8 Maki Cali saumon avocat • 8 Spring Roll saumon avocat",
-        price: 21.4,
+        price: 24.9,
         img: "/menu/menu-m6.jpg",
       },
       {
@@ -322,7 +328,7 @@ export default function MenuPage() {
     ["F2", "Spicy California Roll", 7.6],
     ["F3", "Crunch California Roll", 7.6],
     ["F4", "Fromage California Roll", 7.6],
-    ["F5", "Wakame California Roll", 7.6],
+    ["F5", "Wagame California Roll", 7.6],
     ["F8", "California Roll au Saumon", 8.9],
     ["F9", "California Roll au Thon", 8.9],
     ["F10", "California Roll aux Crevettes", 9.3],
@@ -334,16 +340,18 @@ export default function MenuPage() {
     const p = Number(price);
 
     return (
-      <div key={sid} className="bg-white rounded-2xl shadow p-5">
+      <div key={sid} className="bg-white rounded-2xl shadow p-5 text-center flex flex-col items-center">
         <h3 className="text-xl font-semibold">{`${sid} – ${name}`}</h3>
         <p className="mt-2 font-bold">{p.toFixed(2)} €</p>
 
-        <QuantityControl
-          value={items[sid]?.qty ?? 0}
-          onInc={() => inc(sid, { name: String(name), price: p })}
-          onDec={() => dec(sid)}
-        />
-      </div>
+       
+  <QuantityControl
+    value={items[sid]?.qty ?? 0}
+    onInc={() => inc(sid, { name: String(name), price: p })}
+    onDec={() => dec(sid)}
+  />
+</div>
+
     );
   })}
 </div>
@@ -388,7 +396,7 @@ export default function MenuPage() {
             const [id, ...rest] = item.split(" ");
             const name = rest.join(" ");
             return (
-              <div key={id} className="bg-white rounded-2xl shadow p-5">
+              <div key={id} className="bg-white rounded-2xl shadow p-5 text-center flex flex-col items-center">
                 <h3 className="text-xl font-semibold">{item}</h3>
                 <p className="mt-2 font-bold">6,60 €</p>
                 <QuantityControl
@@ -502,106 +510,147 @@ export default function MenuPage() {
           ))}
         </div>
       </section>
+     {/* --- Section Menu Végétarien --- */}
+<section id="menu-vegetarien" className="py-16 px-6">
+  <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">
+    Menu Végétarien
+  </h2>
 
-      {/* --- Section Menu Végétarien --- */}
-      <section id="menu-vegetarien" className="py-16 px-6">
-        <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">
-          Menu Végétarien
-        </h2>
+  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
 
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {[
-            {
-              id: "veggie-nigiri",
-              name: "Nigiri Veggie",
-              desc: "Inari / Avocat / Omelette / Mangue – 1,70 €/pièce",
-              price: 1.7,
-              img: "/menu/veggie-nigiri.jpg",
-            },
-            {
-              id: "veggie-temaki",
-              name: "Temaki Veggie",
-              desc: "Concombre-Avocat-Fromage / Concombre-Mangue-Fromage – 5,30 €/pièce",
-              price: 5.3,
-              img: "/menu/veggie-temaki.jpg",
-            },
-            {
-              id: "veggie-maki",
-              name: "Maki Veggie (8 pcs)",
-              desc: "Concombre / Avocat / Mangue / Fromage / Omelette – 4,60 €",
-              price: 4.6,
-              img: "/menu/veggie-maki.jpg",
-            },
-            {
-              id: "veggie-california",
-              name: "Maki California Veggie (8 pcs)",
-              desc: "Concombre-Fromage / Avocat-Fromage / Concombre-Avocat-Carotte – 5,30 €",
-              price: 5.3,
-              img: "/menu/veggie-california.jpg",
-            },
-            {
-              id: "veggie-futomaki",
-              name: "Futomaki Veggie (4 pcs)",
-              desc: "Concombre • Avocat • Mangue • Radis Jaune • Carotte • Omelette – 7,50 €",
-              price: 7.5,
-              img: "/menu/veggie-futomaki.jpg",
-            },
-            {
-              id: "veggie-spring",
-              name: "Spring Roll Veggie (8 pcs)",
-              desc: "Concombre-Fromage / Avocat-Fromage / Concombre-Carotte-Avocat – 6,10 €",
-              price: 6.1,
-              img: "/menu/veggie-spring.jpg",
-            },
-            {
-              id: "veggie-roll",
-              name: "California Veggie Roll (9 pcs)",
-              desc: "Classic 6,90 € – Crunch/Spicy/Fromage/Wagame 7,50 €",
-              price: 6.9,
-              img: "/menu/veggie-roll.jpg",
-            },
-            {
-              id: "menu-vert",
-              name: "Menu Vert (11 pcs)",
-              desc: "3 Nigiri Avocat • 8 Maki Concombre",
-              price: 7.8,
-              img: "/menu/veggie-vert.jpg",
-            },
-            {
-              id: "menu-crunch",
-              name: "Menu Crunch (19 pcs)",
-              desc: "2 Nigiri Omelette • 8 Maki Cali Avocat Fromage • 9 Crunch Cali Roll Veggie",
-              price: 14.5,
-              img: "/menu/veggie-crunch.jpg",
-            },
-            {
-              id: "menu-veggie-mix",
-              name: "Menu Veggie Mix (28 pcs)",
-              desc: "4 Nigiri (Avocat / Mangue / Radis Jaune / Omelette) • 4 Crunch Cali Veggie • 4 Spicy Cali Veggie • 8 Spring Roll Mangue Fromage • 8 Maki Cali Concombre-Avocat",
-              price: 22.5,
-              img: "/menu/veggie-mix.jpg",
-            },
-          ].map((v) => (
-            <div key={v.id} className="bg-white rounded-2xl shadow p-5 text-center">
-              <Image
-                src={v.img}
-                alt={v.name}
-                width={400}
-                height={300}
-                className="rounded-xl mb-4 object-cover"
-              />
-              <h3 className="text-xl font-semibold">{v.name}</h3>
-              <p className="text-gray-600 mt-2">{v.desc}</p>
-              <p className="mt-2 font-bold">{v.price.toFixed(2)} €</p>
-              <QuantityControl
-                value={items[v.id]?.qty || 0}
-                onInc={() => inc(v.id, { name: v.name, price: v.price })}
-                onDec={() => dec(v.id)}
-              />
-            </div>
-          ))}
-        </div>
-      </section>
+    {/* 1) Nigiri Veggie — POPUP */}
+    <MenuItem
+      id="veggie-nigiri"
+      name="Nigiri Veggie"
+      desc="Inari / Avocat / Omelette / Mangue – 1,70 €/pièce"
+      price={1.7}
+      img="/menu/veggie-nigiri.jpg"
+      variants={["Inari", "Avocat", "Omelette", "Mangue"]}
+    />
+
+    {/* 2) Temaki Veggie — POPUP */}
+    <MenuItem
+      id="veggie-temaki"
+      name="Temaki Veggie"
+      desc="Concombre-Avocat-Fromage / Concombre-Mangue-Fromage – 5,30 €/pièce"
+      price={5.3}
+      img="/menu/veggie-temaki.jpg"
+      variants={["Concombre-Avocat-Fromage", "Concombre-Mangue-Fromage"]}
+    />
+
+    {/* 3) Maki Veggie (8 pcs) — POPUP */}
+    <MenuItem
+      id="veggie-maki"
+      name="Maki Veggie (8 pcs)"
+      desc="Concombre / Avocat / Mangue / Fromage / Omelette – 4,60 €"
+      price={4.6}
+      img="/menu/veggie-maki.jpg"
+      variants={["Concombre", "Avocat", "Mangue", "Fromage", "Omelette"]}
+    />
+
+    {/* 4) Maki California Veggie (8 pcs) — POPUP */}
+    <MenuItem
+      id="veggie-california"
+      name="Maki California Veggie (8 pcs)"
+      desc="Concombre-Fromage / Avocat-Fromage / Concombre-Avocat-Carotte – 5,30 €"
+      price={5.3}
+      img="/menu/veggie-california.jpg"
+      variants={["Concombre-Fromage", "Avocat-Fromage", "Concombre-Avocat-Carotte"]}
+    />
+
+    {/* 5) Futomaki Veggie (4 pcs) — POPUP */}
+    <MenuItem
+      id="veggie-futomaki"
+      name="Futomaki Veggie (4 pcs)"
+      desc="Concombre • Avocat • Mangue • Radis Jaune • Carotte • Omelette – 7,50 €"
+      price={7.5}
+      img="/menu/veggie-futomaki.jpg"
+      variants={["Concombre", "Avocat", "Mangue", "Radis Jaune", "Carotte", "Omelette"]}
+    />
+
+    {/* 6) Spring Roll Veggie (8 pcs) — POPUP */}
+    <MenuItem
+      id="veggie-spring"
+      name="Spring Roll Veggie (8 pcs)"
+      desc="Concombre-Fromage / Avocat-Fromage / Concombre-Carotte-Avocat – 6,10 €"
+      price={6.1}
+      img="/menu/veggie-spring.jpg"
+      variants={["Concombre-Fromage", "Avocat-Fromage", "Concombre-Carotte-Avocat"]}
+    />
+
+    {/* 7) California Veggie Roll (9 pcs) — POPUP */}
+    <MenuItem
+      id="veggie-roll"
+      name="California Veggie Roll (9 pcs)"
+      desc="Classic 6,90 € – Crunch/Spicy/Fromage/Wakame 7,50 €"
+      price={6.9}
+      img="/menu/veggie-roll.jpg"
+      variants={["Classic", "Crunch", "Spicy", "Fromage", "Wakame"]}
+    />
+
+    {/* Les 3 autres SANS POPUP, inchangés */}
+    <div className="bg-white rounded-2xl shadow p-5 text-center">
+      <Image
+        src="/menu/veggie-vert.jpg"
+        alt="Menu Vert (11 pcs)"
+        width={400}
+        height={300}
+        className="rounded-xl mb-4 object-cover"
+      />
+      <h3 className="text-xl font-semibold">Menu Vert (11 pcs)</h3>
+      <p className="text-gray-600 mt-2">3 Nigiri Avocat • 8 Maki Concombre</p>
+      <p className="mt-2 font-bold">7,80 €</p>
+      <QuantityControl
+        value={items["menu-vert"]?.qty || 0}
+        onInc={() => inc("menu-vert", { name: "Menu Vert (11 pcs)", price: 7.8 })}
+        onDec={() => dec("menu-vert")}
+      />
+    </div>
+
+    <div className="bg-white rounded-2xl shadow p-5 text-center">
+      <Image
+        src="/menu/veggie-crunch.jpg"
+        alt="Menu Crunch (19 pcs)"
+        width={400}
+        height={300}
+        className="rounded-xl mb-4 object-cover"
+      />
+      <h3 className="text-xl font-semibold">Menu Crunch (19 pcs)</h3>
+      <p className="text-gray-600 mt-2">
+        2 Nigiri Omelette • 8 Maki Cali Avocat Fromage • 9 Crunch Cali Roll Veggie
+      </p>
+      <p className="mt-2 font-bold">14,50 €</p>
+      <QuantityControl
+        value={items["menu-crunch"]?.qty || 0}
+        onInc={() => inc("menu-crunch", { name: "Menu Crunch (19 pcs)", price: 14.5 })}
+        onDec={() => dec("menu-crunch")}
+      />
+    </div>
+
+    <div className="bg-white rounded-2xl shadow p-5 text-center">
+      <Image
+        src="/menu/veggie-mix.jpg"
+        alt="Menu Veggie Mix (28 pcs)"
+        width={400}
+        height={300}
+        className="rounded-xl mb-4 object-cover"
+      />
+      <h3 className="text-xl font-semibold">Menu Veggie Mix (28 pcs)</h3>
+      <p className="text-gray-600 mt-2">
+        4 Nigiri (Avocat / Mangue / Radis Jaune / Omelette) • 4 Crunch Cali Veggie • 4 Spicy Cali Veggie • 8 Spring Roll Mangue Fromage • 8 Maki Cali Concombre-Avocat
+      </p>
+      <p className="mt-2 font-bold">22,50 €</p>
+      <QuantityControl
+        value={items["menu-veggie-mix"]?.qty || 0}
+        onInc={() => inc("menu-veggie-mix", { name: "Menu Veggie Mix (28 pcs)", price: 22.5 })}
+        onDec={() => dec("menu-veggie-mix")}
+      />
+    </div>
+
+  </div>
+</section>
+
+
 
       {/* --- Section Nigiri --- */}
       <section id="nigiri" className="py-16 px-6">
@@ -629,7 +678,7 @@ export default function MenuPage() {
             ["A7", "Anguille", 2.1],
             ["A10", "Surimi", 2.1],
           ].map(([id, name, price]) => (
-            <div key={id} className="bg-white rounded-2xl shadow p-5">
+            <div key={id} className="bg-white rounded-2xl shadow p-5 text-center flex flex-col items-center">
               <h3 className="text-xl font-semibold">{`${id} – ${name}`}</h3>
            <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
 
@@ -903,33 +952,88 @@ export default function MenuPage() {
 
 
       {/* --- Section Softs --- */}
-      <section id="soft" className="py-16 px-6">
-        <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">Softs</h2>
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            ["Eau plate / pétillante", 2],
-            ["Coca-Cola / Coca Zero", 2],
-            ["Fanta / Sprite", 2],
-            ["Ice Tea (pétillant, pêche, green)", 2],
-            ["Thé vert froid (Jasmin / Melon / Litchi)", 2.9],
-            ["Ramune japonais (200 ml)", 3.2],
-          ].map(([name, price], i) => {
-            const id = `soft-${i + 1}`;
-            return (
-              <div key={id} className="bg-white rounded-2xl shadow p-5 text-center">
-                <h3 className="text-xl font-semibold">{name}</h3>
-                <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
-                <QuantityControl
-                  value={items[id]?.qty || 0}
-                  onInc={() => inc(id, { name: String(name), price: Number(price) })}
+<section id="soft" className="py-16 px-6">
+  <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">Softs</h2>
+  <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+    {[
+      {
+        id: "soft-1",
+        name: "Eau",
+        price: 2,
+        variants: ["Plate", "Pétillante"],
+      },
+      {
+        id: "soft-2",
+        name: "Coca-Cola",
+        price: 2,
+        variants: ["Classique", "Zero"],
+      },
+      {
+        id: "soft-3",
+        name: "Fanta / Sprite",
+        price: 2,
+        variants: ["Fanta", "Sprite"],
+      },
+      {
+        id: "soft-4",
+        name: "Ice Tea",
+        price: 2,
+        variants: ["Pétillant", "Pêche", "Green"],
+      },
+      {
+        id: "soft-5",
+        name: "Thé vert froid",
+        price: 2.9,
+        variants: ["Jasmin", "Melon", "Litchi"],
+      },
+      {
+        id: "soft-6",
+        name: "Ramune japonais (200 ml)",
+        price: 3.2,
+        variants: [],
+      },
+    ].map(({ id, name, price, variants }) => (
+      <div
+        key={id}
+        className="bg-white rounded-2xl shadow p-5 text-center flex flex-col items-center"
+      >
+        <h3 className="text-xl font-semibold">{name}</h3>
+        <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
 
-                  onDec={() => dec(id)}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </section>
+        {variants.length > 0 ? (
+          <>
+            <button
+              onClick={() => setOpenModal(id)}
+              aria-label="Choisir une variante"
+              className="border border-gray-300 rounded-md w-10 h-10 text-lg font-bold leading-none text-black bg-white hover:bg-gray-100 mt-2"
+            >
+              +
+            </button>
+
+            {openModal === id && (
+              <VariantModal
+                productId={id}
+                productName={name}
+                variants={variants}
+                price={price}
+                onClose={() => setOpenModal(null)}
+              />
+            )}
+          </>
+        ) : (
+          <div className="mt-2 flex justify-center">
+            <QuantityControl
+              value={items[id]?.qty || 0}
+              onInc={() => inc(id, { name, price })}
+              onDec={() => dec(id)}
+            />
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</section>
+
 
       {/* --- Section Bières --- */}
       <section id="bieres" className="py-16 px-6">
