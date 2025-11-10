@@ -15,16 +15,41 @@ export default function VariantModal({
   price: number;
   onClose: () => void;
 }) {
-  const { inc } = useCart();
+  const { items, setQty } = useCart();
   const [selected, setSelected] = useState<Record<string, number>>({});
 
-  const totalSelected = Object.values(selected).reduce((a, b) => a + b, 0);
-
+  // Pour les softs, on garde le préfixe (Eau, Coca, etc.)
   const shouldPrefix =
     productName.includes("Eau") ||
     productName.includes("Coca") ||
     productName.includes("Ice Tea") ||
     productName.includes("Thé vert froid");
+
+  // Pour le menu végétarien, il faut aussi le nom complet
+  const isVeggie =
+    productName.includes("Veggie") ||
+    productName.includes("Végétarien");
+
+  const handleApply = () => {
+    Object.entries(selected).forEach(([key, qty]) => {
+      if (qty > 0) {
+        const variant = key.split("-").slice(2).join("-");
+        let finalName = variant;
+
+        if (shouldPrefix) {
+          finalName = `${productName} ${variant}`;
+        } else if (isVeggie) {
+          // Exemple : Nigiri Veggie Inari
+          finalName = `${productName} ${variant}`;
+        }
+
+        setQty(key, qty, { name: finalName, price });
+      } else {
+        setQty(key, 0);
+      }
+    });
+    onClose();
+  };
 
   return (
     <div
@@ -40,7 +65,10 @@ export default function VariantModal({
         <div className="space-y-3 mb-4">
           {variants.map((variant) => {
             const key = `${productId}-${variant}`;
-            const qty = selected[key] || 0;
+            const qty =
+              selected[key] ??
+              items[key]?.qty ??
+              0;
 
             return (
               <div
@@ -53,7 +81,7 @@ export default function VariantModal({
                     onClick={() =>
                       setSelected((prev) => ({
                         ...prev,
-                        [key]: Math.max((prev[key] || 0) - 1, 0),
+                        [key]: Math.max(qty - 1, 0),
                       }))
                     }
                     className="px-2 border rounded"
@@ -65,7 +93,7 @@ export default function VariantModal({
                     onClick={() =>
                       setSelected((prev) => ({
                         ...prev,
-                        [key]: (prev[key] || 0) + 1,
+                        [key]: qty + 1,
                       }))
                     }
                     className="px-2 border rounded"
@@ -79,23 +107,11 @@ export default function VariantModal({
         </div>
 
         <button
-          disabled={totalSelected === 0}
-          onClick={() => {
-            Object.entries(selected).forEach(([key, qty]) => {
-              if (qty > 0) {
-                const variant = key.split("-").slice(2).join("-");
-                const finalName = shouldPrefix
-                  ? `${productName} ${variant}`
-                  : variant; // ex : "Eau Plate" ou "Sprite"
-                inc(key, { name: finalName, price });
-              }
-            });
-            onClose();
-          }}
+          onClick={handleApply}
           className={`w-full py-2 rounded font-semibold transition ${
-            totalSelected === 0
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-[#B51E1E] text-white hover:bg-[#a11b1b]"
+            Object.values(selected).some((v) => v > 0)
+              ? "bg-[#B51E1E] text-white hover:bg-[#a11b1b]"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >
           Ajouter à la commande
