@@ -1,9 +1,6 @@
-"use client";
-
 import Image from "next/image";
 
 export default function HomePage() {
-  // Numéro de téléphone
   const phoneNumber = "084860482";
 
   return (
@@ -25,7 +22,7 @@ export default function HomePage() {
 
         <div className="mb-10">
           <Image
-            src="/poissons.jpg" // remplace par ton vrai fichier si différent
+            src="/poissons.jpg"
             alt="Logo Futari"
             width={260}
             height={260}
@@ -33,43 +30,49 @@ export default function HomePage() {
           />
         </div>
 
+        {/* --- Phrase explicative --- */}
+        <p className="text-base md:text-lg text-gray-700 max-w-md mb-10">
+          Choisissez vos plats dans le <strong>menu</strong>, ajoutez-les à votre
+          <strong> panier</strong>, puis appuyez sur{" "}
+          <strong>“Commander par téléphone”</strong> pour lire votre commande et
+          la valider directement avec l'établissement.
+        </p>
+
         <div className="flex flex-col md:flex-row gap-4">
-         <a
-  href="/menu"
-  className="bg-[#B51E1E] text-white px-8 py-4 rounded-full text-lg font-semibold transition-transform duration-100 ease-in-out hover:bg-[#a11b1b] active:scale-90"
->
-  Voir le menu
-</a>
+          <a
+            href="/menu"
+            className="bg-[#B51E1E] text-white px-8 py-4 rounded-full text-lg font-semibold transition-transform duration-100 ease-in-out hover:bg-[#a11b1b] active:scale-90"
+          >
+            Voir le menu
+          </a>
 
-<a
-  href="tel:0485876988"
-  className="border-2 border-[#B51E1E] text-[#B51E1E] px-8 py-4 rounded-full text-lg font-semibold transition-transform duration-100 ease-in-out hover:bg-[#B51E1E] hover:text-white active:scale-90"
->
-  Commander
-</a>
-
-
+          <a
+            href="tel:0485876988"
+            className="border-2 border-[#B51E1E] text-[#B51E1E] px-8 py-4 rounded-full text-lg font-semibold transition-transform duration-100 ease-in-out hover:bg-[#B51E1E] hover:text-white active:scale-90"
+          >
+            Commander
+          </a>
         </div>
       </section>
+
       <footer className="bg-[#FAF7F2] text-center text-gray-800 py-8 border-t border-[#B51E1E]/20">
-  <div className="max-w-xl mx-auto space-y-3">
-    <p className="font-medium">
-      Rue Notre Dame de Grâces 3<br />
-      6900 Marche-en-Famenne
-    </p>
+        <div className="max-w-xl mx-auto space-y-3">
+          <p className="font-medium">
+            Rue Notre Dame de Grâces 3<br />
+            6900 Marche-en-Famenne
+          </p>
 
-    <div className="space-y-1">
-      <p className="font-semibold text-[#B51E1E]">Heures d’ouverture</p>
-      <p>11:00 – 14:30 &nbsp;&nbsp;•&nbsp;&nbsp; 16:30 – 20:30</p>
-      <p>Fermé le mercredi</p>
-    </div>
+          <div className="space-y-1">
+            <p className="font-semibold text-[#B51E1E]">Heures d’ouverture</p>
+            <p>11:00 – 14:30 &nbsp;&nbsp;•&nbsp;&nbsp; 16:30 – 20:30</p>
+            <p>Fermé le mercredi</p>
+          </div>
 
-    <p className="text-[#B51E1E] font-semibold uppercase">
-      Ouvert les dimanches et jours fériés
-    </p>
-  </div>
-</footer>
-
+          <p className="text-[#B51E1E] font-semibold uppercase">
+            Ouvert les dimanches et jours fériés
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }
