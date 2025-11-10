@@ -1,7 +1,6 @@
 "use client";
 import { useCart } from "../context/cartcontext";
-import QuantityControl from "./quantitycontrol";
-import { useMemo } from "react";
+import { useState } from "react";
 
 export default function VariantModal({
   productId,
@@ -16,65 +15,87 @@ export default function VariantModal({
   price: number;
   onClose: () => void;
 }) {
-  const { items, inc, dec } = useCart();
+  const { inc } = useCart();
+  const [selected, setSelected] = useState<Record<string, number>>({});
 
-  // vérifie s'il y a au moins une quantité > 0
-  const hasSelection = useMemo(() => {
-    return variants.some(
-      (v) => items[`${productId}-${v.toLowerCase()}`]?.qty > 0
-    );
-  }, [items, variants, productId]);
+  const totalSelected = Object.values(selected).reduce((a, b) => a + b, 0);
 
-  // nom final: une seule fois “Nigiri Veggie Inari”
-  const buildName = (variant: string) => {
-    // retire tout doublon de mots identiques côte à côte
-    const clean = productName
-      .replace(/\b(\w+)\s+\1\b/gi, "$1")
-      .replace(/\s+/g, " ")
-      .trim();
-    return `${clean} ${variant}`.trim();
-  };
+  const shouldPrefix =
+    productName.includes("Eau") ||
+    productName.includes("Coca") ||
+    productName.includes("Ice Tea") ||
+    productName.includes("Thé vert froid");
 
   return (
     <div
+      className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
       onClick={onClose}
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
     >
       <div
+        className="bg-white rounded-xl p-6 w-80"
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl p-6 w-[90%] max-w-md text-center shadow-xl"
       >
-        <h2 className="text-2xl font-bold text-[#B51E1E] mb-6">
-          {productName}
-        </h2>
+        <h3 className="text-xl font-semibold mb-4">{productName}</h3>
 
-        <div className="space-y-4 mb-6">
-          {variants.map((v) => {
-            const id = `${productId}-${v.toLowerCase()}`;
-            const qty = items[id]?.qty || 0;
+        <div className="space-y-3 mb-4">
+          {variants.map((variant) => {
+            const key = `${productId}-${variant}`;
+            const qty = selected[key] || 0;
+
             return (
               <div
-                key={id}
-                className="flex justify-between items-center border-b border-gray-200 pb-2"
+                key={key}
+                className="flex justify-between items-center border-b pb-1"
               >
-                <span className="font-medium">{v}</span>
-                <QuantityControl
-                  value={qty}
-                  onInc={() => inc(id, { name: buildName(v), price })}
-                  onDec={() => dec(id)}
-                />
+                <span>{variant}</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() =>
+                      setSelected((prev) => ({
+                        ...prev,
+                        [key]: Math.max((prev[key] || 0) - 1, 0),
+                      }))
+                    }
+                    className="px-2 border rounded"
+                  >
+                    −
+                  </button>
+                  <span>{qty}</span>
+                  <button
+                    onClick={() =>
+                      setSelected((prev) => ({
+                        ...prev,
+                        [key]: (prev[key] || 0) + 1,
+                      }))
+                    }
+                    className="px-2 border rounded"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             );
           })}
         </div>
 
         <button
-          disabled={!hasSelection}
-          onClick={onClose}
-          className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-            hasSelection
-              ? "bg-[#B51E1E] text-white cursor-pointer"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          disabled={totalSelected === 0}
+          onClick={() => {
+            Object.entries(selected).forEach(([key, qty]) => {
+              if (qty > 0) {
+                const variant = key.split("-").slice(2).join("-");
+                const finalName = shouldPrefix
+                  ? `${productName} ${variant}`
+                  : variant; // ex : "Eau Plate" ou "Sprite"
+                inc(key, { name: finalName, price });
+              }
+            });
+            onClose();
+          }}
+          className={`w-full py-2 rounded font-semibold transition ${
+            totalSelected === 0
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-[#B51E1E] text-white hover:bg-[#a11b1b]"
           }`}
         >
           Ajouter à la commande
