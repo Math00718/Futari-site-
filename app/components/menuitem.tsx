@@ -5,6 +5,12 @@ import Image from "next/image";
 import { useState } from "react";
 import VariantModal from "./VariantModal";
 
+type ExtraData = {
+  isPoke?: boolean;
+  type?: string;
+  size?: "small" | "large";
+};
+
 export default function MenuItem({
   id,
   name,
@@ -20,13 +26,12 @@ export default function MenuItem({
   price: number;
   img?: string;
   variants?: string[];
-  extra?: any; // accepte type, isPoke, size, etc.
+  extra?: ExtraData; // plus de any
 }) {
   const { items, inc, dec } = useCart();
   const qty = items[id]?.qty || 0;
   const [open, setOpen] = useState(false);
 
-  // Détection Poké
   const isPoke = !!(extra?.isPoke || extra?.type === "poke");
 
   return (
@@ -42,12 +47,10 @@ export default function MenuItem({
       )}
 
       <h3 className="text-xl font-semibold mb-1">{name}</h3>
-
       {desc && <p className="text-gray-600 mb-2 text-sm">{desc}</p>}
-
       <p className="font-bold text-lg mb-3">{price.toFixed(2)} €</p>
 
-      {/* ---------- CAS POKÉ : modal obligatoire ---------- */}
+      {/* POKÉ */}
       {isPoke && (
         <>
           <button
@@ -61,16 +64,16 @@ export default function MenuItem({
             <VariantModal
               productId={id}
               productName={name}
-              variants={[]} // pas utilisé en mode Poké
+              variants={[]}
               price={price}
               onClose={() => setOpen(false)}
-              extra={extra} // doit contenir size: "small" ou "large"
+              extra={extra}
             />
           )}
         </>
       )}
 
-      {/* ---------- CAS VARIANTES (ex: softs) ---------- */}
+      {/* VARIANTS */}
       {!isPoke && variants?.length ? (
         <>
           <button
@@ -92,7 +95,7 @@ export default function MenuItem({
         </>
       ) : null}
 
-      {/* ---------- CAS NORMAL ---------- */}
+      {/* NORMAL */}
       {!isPoke && !variants?.length && (
         <QuantityControl
           value={qty}

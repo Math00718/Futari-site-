@@ -2,15 +2,24 @@
 import { useCart } from "../context/cartcontext";
 import { useState } from "react";
 
-/* ----------------------------------------------------------
-   TYPES + CONFIGURATION POKÉ
----------------------------------------------------------- */
+/* TYPES */
 
 type PokeCategory = "base" | "protein" | "salad" | "sauce" | "topping";
 
+type ExtraData = {
+  isPoke?: boolean;
+  type?: string;
+  size?: "small" | "large";
+};
+
+type SelectedVariants = Record<string, number>;
+
+type PokeSelection = Record<PokeCategory, string[]>;
+
+/* CONFIG */
+
 const pokeOptions: Record<PokeCategory, string[]> = {
   base: ["Riz vinaigré"],
-
   protein: [
     "Saumon",
     "Thon",
@@ -22,7 +31,6 @@ const pokeOptions: Record<PokeCategory, string[]> = {
     "Thon Mayo",
     "Tofu",
   ],
-
   salad: [
     "Concombre",
     "Wakame",
@@ -34,7 +42,6 @@ const pokeOptions: Record<PokeCategory, string[]> = {
     "Oignon",
     "Maïs",
   ],
-
   sauce: [
     "Soja Salée",
     "Soja Sucrée",
@@ -43,7 +50,6 @@ const pokeOptions: Record<PokeCategory, string[]> = {
     "Spicy Mayo",
     "Aigre Douce",
   ],
-
   topping: [
     "Sésame",
     "Wasabi",
@@ -54,27 +60,12 @@ const pokeOptions: Record<PokeCategory, string[]> = {
   ],
 };
 
-/* --- LIMITES SMALL & LARGE --- */
 const pokeLimits = {
-  small: {
-    base: 1,
-    protein: 2,
-    salad: 2,
-    sauce: 1,
-    topping: 1,
-  },
-  large: {
-    base: 1,
-    protein: 3,
-    salad: 4,
-    sauce: 1,
-    topping: 1,
-  },
+  small: { base: 1, protein: 2, salad: 2, sauce: 1, topping: 1 },
+  large: { base: 1, protein: 3, salad: 4, sauce: 1, topping: 1 },
 };
 
-/* ----------------------------------------------------------
-   COMPONENT
----------------------------------------------------------- */
+/* COMPONENT */
 
 export default function VariantModal({
   productId,
@@ -89,32 +80,23 @@ export default function VariantModal({
   variants: string[];
   price: number;
   onClose: () => void;
-  extra?: any;
+  extra?: ExtraData;
 }) {
   const { items, setQty } = useCart();
 
-  /* ---------- Détection mode Poké ---------- */
-  const isPoke: boolean = !!(extra?.isPoke || extra?.type === "poke");
+  const isPoke = !!(extra?.isPoke || extra?.type === "poke");
 
-  // size small par défaut
   const pokeSize: "small" | "large" =
     extra?.size === "large" ? "large" : "small";
 
-  /* ---------- États ---------- */
-  const [selected, setSelected] = useState<Record<string, number>>({});
-  const [pokeSelected, setPokeSelected] = useState<
-    Record<PokeCategory, string[]>
-  >({
+  const [selected, setSelected] = useState<SelectedVariants>({});
+  const [pokeSelected, setPokeSelected] = useState<PokeSelection>({
     base: [],
     protein: [],
     salad: [],
     sauce: [],
     topping: [],
   });
-
-  /* ----------------------------------------------------------
-     LOGIQUE POKÉ
-  ---------------------------------------------------------- */
 
   const togglePoke = (cat: PokeCategory, item: string) => {
     const limit = pokeLimits[pokeSize][cat];
@@ -136,46 +118,40 @@ export default function VariantModal({
     }));
   };
 
-  /* ----------------------------------------------------------
-     AJOUT AU PANIER
-  ---------------------------------------------------------- */
-
   const handleApply = () => {
     if (isPoke) {
+      const hasBase = pokeSelected.base.length >= 1;
+      const hasSalad = pokeSelected.salad.length >= 1;
 
-  // Sécurité : on vérifie base + salade
-  const hasBase = pokeSelected.base.length >= 1;
-  const hasSalad = pokeSelected.salad.length >= 1;
+      if (!hasBase || !hasSalad) {
+        onClose();
+        return;
+      }
 
-  if (!hasBase || !hasSalad) {
-    // Ne rien ajouter — juste fermer
-    onClose();
-    return;
-  }
+      const finalName =
+        "Poké " + (pokeSize === "small" ? "Petit" : "Grand");
 
-  const finalName = `Poké ${
-    pokeSize === "small" ? "Petit" : "Grand"
-  }`;
+      const uniqueId =
+        productId + "-" + Math.random().toString(36).substring(2, 9);
 
-  const uniqueId =
-    productId + "-" + Math.random().toString(36).substring(2, 9);
+      setQty(uniqueId, 1, {
+        name: finalName,
+        price,
+        details: pokeSelected,
+      });
 
-  setQty(uniqueId, 1, {
-    name: finalName,
-    price,
-    details: pokeSelected,
-  });
+      onClose();
+      return;
+    }
 
-  onClose();
-  return;
-}
-
-
-    /* ----------- CAS NORMAL ---------- */
+    /* NORMAL */
     Object.entries(selected).forEach(([key, qty]) => {
       if (qty > 0) {
         const variant = key.split("-").slice(2).join("-");
-        setQty(key, qty, { name: `${productName} ${variant}`, price });
+        setQty(key, qty, {
+          name: `${productName} ${variant}`,
+          price,
+        });
       } else {
         setQty(key, 0);
       }
@@ -183,10 +159,6 @@ export default function VariantModal({
 
     onClose();
   };
-
-  /* ----------------------------------------------------------
-     RENDER
-  ---------------------------------------------------------- */
 
   return (
     <div
@@ -201,52 +173,51 @@ export default function VariantModal({
           {productName}
         </h3>
 
-        {/* ---------- UI POKE ---------- */}
+        {/* UI POKÉ */}
         {isPoke && (
           <div className="space-y-6">
-            {(
-              Object.entries(pokeOptions) as [PokeCategory, string[]][]
-            ).map(([cat, list]) => (
-              <div key={cat} className="mb-4">
-                <h4 className="font-bold text-lg mb-2 capitalize">
-                  {cat} (max {pokeLimits[pokeSize][cat]})
-                </h4>
+            {(Object.entries(pokeOptions) as [PokeCategory, string[]][]).map(
+              ([cat, list]) => (
+                <div key={cat} className="mb-4">
+                  <h4 className="font-bold text-lg mb-2 capitalize">
+                    {cat} (max {pokeLimits[pokeSize][cat]})
+                  </h4>
 
-                <div className="grid grid-cols-2 gap-2">
-                  {list.map((item) => {
-                    const active = pokeSelected[cat].includes(item);
-                    const limitReached =
-                      pokeSelected[cat].length >= pokeLimits[pokeSize][cat];
+                  <div className="grid grid-cols-2 gap-2">
+                    {list.map((item) => {
+                      const active = pokeSelected[cat].includes(item);
+                      const limitReached =
+                        pokeSelected[cat].length >= pokeLimits[pokeSize][cat];
 
-                    return (
-                      <button
-                        key={item}
-                        onClick={() => togglePoke(cat, item)}
-                        className={`border rounded p-2 text-sm ${
-                          active
-                            ? "bg-[#B51E1E] text-white"
-                            : limitReached
-                            ? "opacity-40 cursor-not-allowed"
-                            : "bg-white"
-                        }`}
-                      >
-                        {item}
-                      </button>
-                    );
-                  })}
+                      return (
+                        <button
+                          key={item}
+                          onClick={() => togglePoke(cat, item)}
+                          className={`border rounded p-2 text-sm ${
+                            active
+                              ? "bg-[#B51E1E] text-white"
+                              : limitReached
+                              ? "opacity-40 cursor-not-allowed"
+                              : "bg-white"
+                          }`}
+                        >
+                          {item}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         )}
 
-        {/* ---------- UI NORMAL ---------- */}
+        {/* UI NORMAL */}
         {!isPoke && (
           <div className="space-y-3 mb-4">
             {variants.map((variant) => {
               const key = `${productId}-${variant}`;
-              const qty =
-                selected[key] ?? items[key]?.qty ?? 0;
+              const qty = selected[key] ?? items[key]?.qty ?? 0;
 
               return (
                 <div
