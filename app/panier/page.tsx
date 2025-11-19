@@ -123,6 +123,14 @@ export default function PanierPage() {
                 <div style={{ fontWeight: 600, fontSize: 14 }}>
                   {item.name}
                 </div>
+                {item.details && (
+  <div style={{ color: "#444", fontSize: 12, marginTop: 4 }}>
+    {Object.entries(item.details)
+      .filter(([_, arr]) => Array.isArray(arr) && arr.length > 0)
+      .map(([cat, arr]) => arr.join(", "))
+      .join(" • ")}
+  </div>
+)}
                 {typeof item.price === "number" && (
                   <div style={{ color: "#666", fontSize: 12 }}>
                     {item.price.toFixed(2)} € / unité

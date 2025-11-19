@@ -12,6 +12,7 @@ export default function MenuItem({
   price,
   img,
   variants,
+  extra,
 }: {
   id: string;
   name: string;
@@ -19,10 +20,14 @@ export default function MenuItem({
   price: number;
   img?: string;
   variants?: string[];
+  extra?: any; // accepte type, isPoke, size, etc.
 }) {
   const { items, inc, dec } = useCart();
   const qty = items[id]?.qty || 0;
   const [open, setOpen] = useState(false);
+
+  // Détection Poké
+  const isPoke = !!(extra?.isPoke || extra?.type === "poke");
 
   return (
     <div className="bg-white rounded-2xl shadow p-5 relative flex flex-col items-center text-center">
@@ -42,27 +47,53 @@ export default function MenuItem({
 
       <p className="font-bold text-lg mb-3">{price.toFixed(2)} €</p>
 
-      {variants?.length ? (
+      {/* ---------- CAS POKÉ : modal obligatoire ---------- */}
+      {isPoke && (
         <>
           <button
             onClick={() => setOpen(true)}
-            aria-label="Choisir la variante"
-            className="border border-gray-300 rounded-md w-10 h-10 text-lg font-bold leading-none text-black bg-white hover:bg-gray-100"
+            className="border border-gray-300 rounded-md w-10 h-10 text-lg font-bold bg-white hover:bg-gray-100"
           >
             +
           </button>
-          {open && (
-  <VariantModal
-    productId={id}
-    productName={name}
-    variants={variants}
-    price={price}
-    onClose={() => setOpen(false)}
-  />
-)}
 
+          {open && (
+            <VariantModal
+              productId={id}
+              productName={name}
+              variants={[]} // pas utilisé en mode Poké
+              price={price}
+              onClose={() => setOpen(false)}
+              extra={extra} // doit contenir size: "small" ou "large"
+            />
+          )}
         </>
-      ) : (
+      )}
+
+      {/* ---------- CAS VARIANTES (ex: softs) ---------- */}
+      {!isPoke && variants?.length ? (
+        <>
+          <button
+            onClick={() => setOpen(true)}
+            className="border border-gray-300 rounded-md w-10 h-10 text-lg font-bold bg-white hover:bg-gray-100"
+          >
+            +
+          </button>
+
+          {open && (
+            <VariantModal
+              productId={id}
+              productName={name}
+              variants={variants}
+              price={price}
+              onClose={() => setOpen(false)}
+            />
+          )}
+        </>
+      ) : null}
+
+      {/* ---------- CAS NORMAL ---------- */}
+      {!isPoke && !variants?.length && (
         <QuantityControl
           value={qty}
           onInc={() => inc(id, { name, price })}

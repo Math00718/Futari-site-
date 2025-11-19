@@ -13,6 +13,7 @@ type CartItem = {
   name: string;
   price: number;
   qty: number;
+  details?: Record<"base" | "protein" | "salad" | "sauce" | "topping", string[]>;
 };
 
 type CartState = Record<string, CartItem>;

@@ -950,6 +950,61 @@ const [openModal, setOpenModal] = useState<string | null>(null);
   </div>
 </section>
 
+{/* --- Section Poké Bowl --- */}
+<section id="poke-bowl" className="py-16 px-6">
+  <h2 className="text-4xl font-bold text-[#B51E1E] mb-2 text-center">
+    Poké Bowl
+  </h2>
+  <p className="text-center text-gray-700 mb-10 text-lg font-medium">
+    Sur mesure – créez votre propre Poké Bowl
+  </p>
+
+  <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+
+    <MenuItem
+  id="poke-small"
+  name="Poké Petit"
+  desc="1 base • 2 protéines • 2 salades • 1 sauce • 1 topping"
+  price={8.5}
+  img="/menu/poke-small.jpg"
+  variants={["Créer votre bol"]}
+  extra={{ 
+        type: "poke",
+        limits: {
+          base: 1,
+          protein: 2,
+          salad: 2,
+          sauce: 1,
+          topping: 1
+        }
+      }}
+    />
+
+    <MenuItem
+  id="poke-large"
+  name="Poké Grand"
+  desc="1 base • 3 protéines • 4 salades • 1 sauce • 1 topping"
+  price={16.0}
+  img="/menu/poke-large.jpg"
+  variants={[]} 
+  extra={{
+    type: "poke",
+    size: "large",      
+    limits: {
+      base: 1,
+      protein: 3,
+      salad: 4,
+      sauce: 1,
+      topping: 1,
+    },
+  }}
+/>
+
+
+  </div>
+</section>
+
+
 
       {/* --- Section Softs --- */}
 <section id="soft" className="py-16 px-6">

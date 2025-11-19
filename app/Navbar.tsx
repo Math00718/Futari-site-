@@ -32,6 +32,7 @@ export default function Navbar() {
     ["Maki", "maki"],
     ["Futomaki", "futomaki"],
     ["Suppléments", "supplements"],
+    ["Poké Bowl", "poke-bowl"],
     ["Softs", "soft"],
     ["Bières", "bieres"],
     ["Desserts", "desserts"],
