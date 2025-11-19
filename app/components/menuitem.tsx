@@ -9,7 +9,15 @@ type ExtraData = {
   isPoke?: boolean;
   type?: string;
   size?: "small" | "large";
+  limits?: {
+    base: number;
+    protein: number;
+    salad: number;
+    sauce: number;
+    topping: number;
+  };
 };
+
 
 export default function MenuItem({
   id,
