@@ -1,4 +1,5 @@
 "use client";
+
 import { useCart } from "../context/cartcontext";
 import QuantityControl from "./quantitycontrol";
 import Image from "next/image";
@@ -18,6 +19,15 @@ type ExtraData = {
   };
 };
 
+type Props = {
+  id: string;
+  name: string;
+  desc?: string;
+  price: number;
+  img?: string;
+  variants?: string[];
+  extra?: ExtraData;
+};
 
 export default function MenuItem({
   id,
@@ -25,22 +35,15 @@ export default function MenuItem({
   desc,
   price,
   img,
-  variants,
+  variants = [], // ← évite undefined
   extra,
-}: {
-  id: string;
-  name: string;
-  desc?: string;
-  price: number;
-  img?: string;
-  variants?: string[];
-  extra?: ExtraData; // plus de any
-}) {
+}: Props) {
   const { items, inc, dec } = useCart();
   const qty = items[id]?.qty || 0;
   const [open, setOpen] = useState(false);
 
   const isPoke = !!(extra?.isPoke || extra?.type === "poke");
+  const hasVariants = !isPoke && variants.length > 0;
 
   return (
     <div className="bg-white rounded-2xl shadow p-5 relative flex flex-col items-center text-center">
@@ -55,62 +58,67 @@ export default function MenuItem({
       )}
 
       <h3 className="text-xl font-semibold mb-1">{name}</h3>
+
       {desc && <p className="text-gray-600 mb-2 text-sm">{desc}</p>}
+
       <p className="font-bold text-lg mb-3">{price.toFixed(2)} €</p>
 
-      {/* POKÉ */}
-      {isPoke && (
-        <>
-          <button
-            onClick={() => setOpen(true)}
-            className="border border-gray-300 rounded-md w-10 h-10 text-lg font-bold bg-white hover:bg-gray-100"
-          >
-            +
-          </button>
+      {/* --- Bouton toujours aligné en bas --- */}
+      <div className="mt-auto flex justify-center">
+        {/* --- POKE (modal obligatoire) --- */}
+        {isPoke && (
+          <>
+            <button
+              onClick={() => setOpen(true)}
+              className="border border-gray-300 rounded-md w-10 h-10 text-lg font-bold bg-white hover:bg-gray-100"
+            >
+              +
+            </button>
 
-          {open && (
-            <VariantModal
-              productId={id}
-              productName={name}
-              variants={[]}
-              price={price}
-              onClose={() => setOpen(false)}
-              extra={extra}
-            />
-          )}
-        </>
-      )}
+            {open && (
+              <VariantModal
+                productId={id}
+                productName={name}
+                variants={[]} // poké n’a pas de variants
+                price={price}
+                onClose={() => setOpen(false)}
+                extra={extra}
+              />
+            )}
+          </>
+        )}
 
-      {/* VARIANTS */}
-      {!isPoke && variants?.length ? (
-        <>
-          <button
-            onClick={() => setOpen(true)}
-            className="border border-gray-300 rounded-md w-10 h-10 text-lg font-bold bg-white hover:bg-gray-100"
-          >
-            +
-          </button>
+        {/* --- VARIANTS (popup obligatoire) --- */}
+        {!isPoke && hasVariants && (
+          <>
+            <button
+              onClick={() => setOpen(true)}
+              className="border border-gray-300 rounded-md w-10 h-10 text-lg font-bold bg-white hover:bg-gray-100"
+            >
+              +
+            </button>
 
-          {open && (
-            <VariantModal
-              productId={id}
-              productName={name}
-              variants={variants}
-              price={price}
-              onClose={() => setOpen(false)}
-            />
-          )}
-        </>
-      ) : null}
+            {open && (
+              <VariantModal
+                productId={id}
+                productName={name}
+                variants={variants}
+                price={price}
+                onClose={() => setOpen(false)}
+              />
+            )}
+          </>
+        )}
 
-      {/* NORMAL */}
-      {!isPoke && !variants?.length && (
-        <QuantityControl
-          value={qty}
-          onInc={() => inc(id, { name, price })}
-          onDec={() => dec(id)}
-        />
-      )}
+        {/* --- NORMAL (pas de popup) --- */}
+        {!isPoke && !hasVariants && (
+          <QuantityControl
+            value={qty}
+            onInc={() => inc(id, { name, price })}
+            onDec={() => dec(id)}
+          />
+        )}
+      </div>
     </div>
   );
 }

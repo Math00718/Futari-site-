@@ -30,7 +30,6 @@ const [openModal, setOpenModal] = useState<string | null>(null);
   <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">
     Plateaux
   </h2>
-
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
     {/* Plateaux existants */}
     {[
@@ -164,7 +163,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
     ].map(({ id, name, desc, price, img }) => (
       <div
         key={id}
-        className="bg-white rounded-2xl shadow p-5 text-center w-80"
+        className="bg-white rounded-2xl shadow p-5 text-center w-80 flex flex-col"
       >
         <Image
           src={String(img)}
@@ -173,18 +172,21 @@ const [openModal, setOpenModal] = useState<string | null>(null);
           height={400}
           className="rounded-lg mb-4 object-cover"
         />
-        <h3 className="text-xl font-semibold">{name}</h3>
+<h3 className="text-xl font-semibold">{name}</h3>
         <p className="text-gray-600 mt-2">{desc}</p>
         <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
-        <QuantityControl
-          value={items[String(id)]?.qty || 0}
-          onInc={() =>
-            inc(String(id), { name: String(name), price: Number(price) })
-          }
-          onDec={() => dec(String(id))}
-        />
+
+        {/* Bouton aligné en bas */}
+        <div className="mt-auto flex justify-center">
+          <QuantityControl
+            value={items[String(id)]?.qty || 0}
+            onInc={() => inc(String(id), { name: String(name), price: Number(price) })}
+            onDec={() => dec(String(id))}
+          />
+        </div>
       </div>
     ))}
+
   </div>
 </section>
 
@@ -247,17 +249,27 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       ["I2", "Tranches de Thon Avocat", "Riz vinaigré garni de thon et avocat", 15.0],
       ["I3", "Tranches de Saumon Thon Avocat", "Mélange saumon-thon sur riz vinaigré", 15.0],
     ].map(([id, name, desc, price]) => (
-      <div key={id} className="bg-white rounded-2xl shadow p-5 text-center">
-        <h3 className="text-xl font-semibold">{`${id} – ${name}`}</h3>
-        <p className="text-gray-600 mt-2">{desc}</p>
-        <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
-        <QuantityControl
-  value={items[String(id)]?.qty || 0}
-  onInc={() => inc(String(id), { name: String(name), price: Number(price) })}
-  onDec={() => dec(String(id))}
-/>
+   <div
+  key={id}
+  className="bg-white rounded-2xl shadow p-5 text-center flex flex-col"
+  style={{ height: "330px" }} // hauteur fixe pour aligner les boutons
+>
+  <h3 className="text-xl font-semibold">{`${id} – ${name}`}</h3>
 
-      </div>
+  <p className="text-gray-600 mt-2 flex-grow">{desc}</p>
+
+  <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
+
+  <div className="mt-auto">
+    <QuantityControl
+      value={items[String(id)]?.qty || 0}
+      onInc={() =>
+        inc(String(id), { name: String(name), price: Number(price) })
+      }
+      onDec={() => dec(String(id))}
+    />
+  </div>
+</div>
     ))}
   </div>
 </section>
@@ -340,18 +352,23 @@ const [openModal, setOpenModal] = useState<string | null>(null);
     const p = Number(price);
 
     return (
-      <div key={sid} className="bg-white rounded-2xl shadow p-5 text-center flex flex-col items-center">
+      <div
+  key={sid}
+  className="bg-white rounded-2xl shadow p-5 text-center flex flex-col justify-between h-full min-h-[220px]"
+>
+
         <h3 className="text-xl font-semibold">{`${sid} – ${name}`}</h3>
         <p className="mt-2 font-bold">{p.toFixed(2)} €</p>
 
        
+  <div className="mt-auto flex justify-center">
   <QuantityControl
     value={items[sid]?.qty ?? 0}
     onInc={() => inc(sid, { name: String(name), price: p })}
     onDec={() => dec(sid)}
   />
+  </div>
 </div>
-
     );
   })}
 </div>
@@ -588,64 +605,78 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       variants={["Classic", "Crunch", "Spicy", "Fromage", "Wakame"]}
     />
 
-    {/* Les 3 autres SANS POPUP, inchangés */}
-    <div className="bg-white rounded-2xl shadow p-5 text-center">
-      <Image
-        src="/menu/veggie-vert.jpg"
-        alt="Menu Vert (11 pcs)"
-        width={400}
-        height={300}
-        className="rounded-xl mb-4 object-cover"
-      />
-      <h3 className="text-xl font-semibold">Menu Vert (11 pcs)</h3>
-      <p className="text-gray-600 mt-2">3 Nigiri Avocat • 8 Maki Concombre</p>
-      <p className="mt-2 font-bold">7,80 €</p>
-      <QuantityControl
-        value={items["menu-vert"]?.qty || 0}
-        onInc={() => inc("menu-vert", { name: "Menu Vert (11 pcs)", price: 7.8 })}
-        onDec={() => dec("menu-vert")}
-      />
-    </div>
+    {/* Les 3 autres SANS POPUP — ALIGNÉS EN BAS */}
+<div className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
+  <Image
+    src="/menu/veggie-vert.jpg"
+    alt="Menu Vert (11 pcs)"
+    width={400}
+    height={300}
+    className="rounded-xl mb-4 object-cover"
+  />
+  <h3 className="text-xl font-semibold">Menu Vert (11 pcs)</h3>
+  <p className="text-gray-600 mt-2">3 Nigiri Avocat • 8 Maki Concombre</p>
+  <p className="mt-2 font-bold">7,80 €</p>
 
-    <div className="bg-white rounded-2xl shadow p-5 text-center">
-      <Image
-        src="/menu/veggie-crunch.jpg"
-        alt="Menu Crunch (19 pcs)"
-        width={400}
-        height={300}
-        className="rounded-xl mb-4 object-cover"
-      />
-      <h3 className="text-xl font-semibold">Menu Crunch (19 pcs)</h3>
-      <p className="text-gray-600 mt-2">
-        2 Nigiri Omelette • 8 Maki Cali Avocat Fromage • 9 Crunch Cali Roll Veggie
-      </p>
-      <p className="mt-2 font-bold">14,50 €</p>
-      <QuantityControl
-        value={items["menu-crunch"]?.qty || 0}
-        onInc={() => inc("menu-crunch", { name: "Menu Crunch (19 pcs)", price: 14.5 })}
-        onDec={() => dec("menu-crunch")}
-      />
-    </div>
+  <div className="mt-auto flex justify-center">
+    <QuantityControl
+      value={items["menu-vert"]?.qty || 0}
+      onInc={() => inc("menu-vert", { name: "Menu Vert (11 pcs)", price: 7.8 })}
+      onDec={() => dec("menu-vert")}
+    />
+  </div>
+</div>
 
-    <div className="bg-white rounded-2xl shadow p-5 text-center">
-      <Image
-        src="/menu/veggie-mix.jpg"
-        alt="Menu Veggie Mix (28 pcs)"
-        width={400}
-        height={300}
-        className="rounded-xl mb-4 object-cover"
-      />
-      <h3 className="text-xl font-semibold">Menu Veggie Mix (28 pcs)</h3>
-      <p className="text-gray-600 mt-2">
-        4 Nigiri (Avocat / Mangue / Radis Jaune / Omelette) • 4 Crunch Cali Veggie • 4 Spicy Cali Veggie • 8 Spring Roll Mangue Fromage • 8 Maki Cali Concombre-Avocat
-      </p>
-      <p className="mt-2 font-bold">22,50 €</p>
-      <QuantityControl
-        value={items["menu-veggie-mix"]?.qty || 0}
-        onInc={() => inc("menu-veggie-mix", { name: "Menu Veggie Mix (28 pcs)", price: 22.5 })}
-        onDec={() => dec("menu-veggie-mix")}
-      />
-    </div>
+
+<div className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
+  <Image
+    src="/menu/veggie-crunch.jpg"
+    alt="Menu Crunch (19 pcs)"
+    width={400}
+    height={300}
+    className="rounded-xl mb-4 object-cover"
+  />
+  <h3 className="text-xl font-semibold">Menu Crunch (19 pcs)</h3>
+  <p className="text-gray-600 mt-2">
+    2 Nigiri Omelette • 8 Maki Cali Avocat Fromage • 9 Crunch Cali Roll Veggie
+  </p>
+  <p className="mt-2 font-bold">14,50 €</p>
+
+  <div className="mt-auto flex justify-center">
+    <QuantityControl
+      value={items["menu-crunch"]?.qty || 0}
+      onInc={() => inc("menu-crunch", { name: "Menu Crunch (19 pcs)", price: 14.5 })}
+      onDec={() => dec("menu-crunch")}
+    />
+  </div>
+</div>
+
+
+<div className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
+  <Image
+    src="/menu/veggie-mix.jpg"
+    alt="Menu Veggie Mix (28 pcs)"
+    width={400}
+    height={300}
+    className="rounded-xl mb-4 object-cover"
+  />
+  <h3 className="text-xl font-semibold">Menu Veggie Mix (28 pcs)</h3>
+  <p className="text-gray-600 mt-2">
+    4 Nigiri (Avocat / Mangue / Radis Jaune / Omelette) • 
+    4 Crunch Cali Veggie • 4 Spicy Cali Veggie • 
+    8 Spring Roll Mangue Fromage • 8 Maki Cali Concombre-Avocat
+  </p>
+  <p className="mt-2 font-bold">22,50 €</p>
+
+  <div className="mt-auto flex justify-center">
+    <QuantityControl
+      value={items["menu-veggie-mix"]?.qty || 0}
+      onInc={() => inc("menu-veggie-mix", { name: "Menu Veggie Mix (28 pcs)", price: 22.5 })}
+      onDec={() => dec("menu-veggie-mix")}
+    />
+  </div>
+</div>
+
 
   </div>
 </section>
@@ -804,15 +835,16 @@ const [openModal, setOpenModal] = useState<string | null>(null);
             ["C6", "Thon Mayo Avocat Concombre", 5.5],
             ["C8", "Poulet Avocat Concombre", 5.6],
           ].map(([id, name, price]) => (
-            <div key={id} className="bg-white rounded-2xl shadow p-5 w-80 text-center">
+            <div key={id} className="bg-white rounded-2xl shadow p-5 w-80 text-center flex flex-col">
               <h3 className="text-xl font-semibold">{`${id} – ${name}`}</h3>
              <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
+               <div className="mt-auto flex justify-center">
                <QuantityControl
   value={items[String(id)]?.qty || 0}
   onInc={() => inc(String(id), { name: String(name), price: Number(price) })}
   onDec={() => dec(String(id))}
 />
-
+</div>
             </div>
           ))}
         </div>
@@ -929,7 +961,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       return (
         <div
           key={id}
-          className="bg-white rounded-2xl shadow p-5 w-80 text-center"
+          className="bg-white rounded-2xl shadow p-5 w-80 text-center flex flex-col"
         >
           <h3 className="text-xl font-semibold flex items-center justify-center gap-2">
             {name}
@@ -944,7 +976,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
             )}
           </h3>
           <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
-
+<div className="mt-auto flex justify-center">
           <QuantityControl
             value={items[String(id)]?.qty || 0}
             onInc={() =>
@@ -955,6 +987,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
             }
             onDec={() => dec(String(id))}
           />
+        </div>
         </div>
       );
     })}
@@ -1157,7 +1190,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
         img: "/menu/maki-nutella-banana.jpg",
       },
     ].map((d) => (
-      <div key={d.id} className="bg-white rounded-2xl shadow p-5 text-center">
+      <div key={d.id} className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
         <Image
           src={d.img}
           alt={d.name}
@@ -1168,12 +1201,14 @@ const [openModal, setOpenModal] = useState<string | null>(null);
         <h3 className="text-xl font-semibold">{d.name}</h3>
         {d.desc && <p className="text-gray-600 mt-2">{d.desc}</p>}
         <p className="mt-2 font-bold">{Number(d.price).toFixed(2)} €</p>
+        <div className="mt-auto flex justify-center">
         <QuantityControl
           value={items[d.id]?.qty || 0}
           onInc={() => inc(d.id, { name: String(d.name), price: Number(d.price) })}
           onDec={() => dec(d.id)}
         />
       </div>
+       </div>
            ))}
   </div>
 </section>
