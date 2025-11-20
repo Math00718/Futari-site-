@@ -195,7 +195,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
   <h2 className="text-4xl font-bold text-[#B51E1E] mb-4 text-center">
     Sashimi
   </h2>
-  <p className="text-center text-gray-700 text-lg font-medium mb-10">
+  <p className="text-center text-blck-700 text-lg font-bold mb-10">
     Servis par 7 pièces
   </p>
 
@@ -229,7 +229,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       {/* --- Section Chirashi --- */}
 <section id="chirashi" className="py-16 px-6">
   <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">Chirashi</h2>
-  <p className="text-center text-gray-600 mb-8">Servis dans un bol</p>
+  <p className="text-center font-bold text-black-600 mb-8">Servis dans un bol</p>
 
   <div className="flex justify-center mb-10">
     <Image
@@ -266,7 +266,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       {/* --- Section Maki California --- */}
 <section id="maki-california" className="py-16 px-6">
   <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">Maki California</h2>
-  <p className="text-center text-gray-600 mb-8">Servis par 8 pièces</p>
+  <p className="text-center font-bold text-black-600 mb-8">Servis par 8 pièces</p>
 
   <div className="flex justify-center gap-6 mb-10 flex-wrap">
     <Image src="/menu/maki-california-1.jpg" alt="Assortiment 1" width={400} height={300} className="rounded-2xl object-cover shadow" />
@@ -310,7 +310,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
         <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">
           California Roll
         </h2>
-        <p className="text-center text-gray-600 mb-8">Servis par 9 pièces</p>
+        <p className="text-center font-bold text-black-600 mb-8">Servis par 9 pièces</p>
 
         <div className="flex justify-center mb-10">
           <Image
@@ -363,7 +363,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
         <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">
           Spring Roll
         </h2>
-        <p className="text-center text-gray-600 mb-8">Servis par 8 pièces</p>
+        <p className="text-center font-bold text-black-600 mb-8">Servis par 8 pièces</p>
 
         <div className="flex justify-center mb-10">
           <Image
@@ -651,12 +651,15 @@ const [openModal, setOpenModal] = useState<string | null>(null);
 </section>
 
 
+{/* --- Section Nigiri --- */} 
+<section id="nigiri" className="py-16 px-6">
+      <h2 className="text-4xl font-bold text-[#B51E1E] mb-6 text-center">
+  Nigiri
+  <span className="block text-black text-lg font-bold">
+    servi à la pièce
+  </span>
+</h2>
 
-      {/* --- Section Nigiri --- */}
-      <section id="nigiri" className="py-16 px-6">
-        <h2 className="text-4xl font-bold text-[#B51E1E] mb-6 text-center">
-          Nigiri <span className="text-black text-lg font-normal">- servi à la pièce</span>
-        </h2>
 
         <div className="flex justify-center mb-10">
           <Image
@@ -696,10 +699,13 @@ const [openModal, setOpenModal] = useState<string | null>(null);
             </div>
           ))}
         </div>
-      {/* --- Sous-section Nigiri Mi-Cuit --- */}
+      {/* --- sous-section Nigiri Mi-Cuit --- */}
   <div className="max-w-4xl mx-auto text-center">
     <h3 className="text-2xl font-bold text-[#B51E1E] mb-4">
-      Nigiri Mi-Cuit <span className="text-black text-lg font-normal">- servi à la pièce</span>
+      Nigiri Mi-Cuit 
+      <span className="block text-black text-lg font-bold"> 
+        servi à la pièce
+        </span>
     </h3>
 
     <div className="flex justify-center gap-10 flex-wrap">
@@ -726,7 +732,10 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       {/* --- Section Gunkan --- */}
 <section id="gunkan" className="py-16 px-6">
   <h2 className="text-4xl font-bold text-[#B51E1E] mb-6 text-center">
-    Gunkan <span className="text-black text-lg font-normal">- servi à la pièce</span>
+    Gunkan 
+    <span className="block text-black text-lg font-bold">
+       servi à la pièce
+       </span>
   </h2>
 
   <div className="flex justify-center mb-10">
@@ -751,7 +760,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       const pprice = Number(price);
 
       return (
-        <div key={sid} className="bg-white rounded-2xl shadow p-5 w-64 text-center">
+        <div key={sid} className="bg-white rounded-2xl shadow p-6 w-77 text-center">
           <h3 className="text-xl font-semibold">{`${sid} – ${pname}`}</h3>
           <p className="mt-2 font-bold">{pprice.toFixed(2)} € / pièce</p>
 
@@ -770,7 +779,9 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       {/* --- Section Temaki --- */}
       <section id="temaki" className="py-16 px-6">
         <h2 className="text-4xl font-bold text-[#B51E1E] mb-6 text-center">
-          Temaki <span className="text-black text-lg font-normal">- servi à la pièce</span>
+          Temaki 
+          <span className="block text-black text-lg font-bold">
+            servi à la pièce</span>
         </h2>
 
         <div className="flex justify-center mb-10">
@@ -810,7 +821,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       {/* --- Section Maki --- */}
       <section id="maki" className="py-16 px-6">
         <h2 className="text-4xl font-bold text-[#B51E1E] mb-6 text-center">Maki</h2>
-        <p className="text-center text-gray-600 mb-8">Servis par 8 pièces</p>
+        <p className="text-center font-bold text-black-600 mb-8">Servis par 8 pièces</p>
 
         <div className="flex justify-center mb-10">
           <Image
@@ -847,7 +858,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       {/* --- Section Futo Maki --- */}
       <section id="futomaki" className="py-16 px-6">
         <h2 className="text-4xl font-bold text-[#B51E1E] mb-4 text-center">Futo Maki</h2>
-        <p className="text-center text-gray-600 mb-8">Servis par 4 pièces</p>
+        <p className="text-center font-bold text-black-600 mb-8">Servis par 4 pièces</p>
 
         <div className="flex justify-center mb-10">
           <Image
@@ -955,8 +966,8 @@ const [openModal, setOpenModal] = useState<string | null>(null);
   <h2 className="text-4xl font-bold text-[#B51E1E] mb-2 text-center">
     Poké Bowl
   </h2>
-  <p className="text-center text-gray-700 mb-10 text-lg font-medium">
-    Sur mesure – créez votre propre Poké Bowl
+  <p className="text-center font-bold text-black-700 mb-10 text-lg font-medium">
+    Créez votre propre Poké Bowl
   </p>
 
   <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">

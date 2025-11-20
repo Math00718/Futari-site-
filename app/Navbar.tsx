@@ -53,9 +53,12 @@ export default function Navbar() {
     <header className="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-200 z-50 text-black">
       <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         {/* Logo */}
-        <h1 className="text-2xl font-bold text-[#b12c20] uppercase tracking-wide">
-          FUTARI
-        </h1>
+       <Link
+  href="/"
+  className="text-2xl font-bold text-[#b12c20] uppercase tracking-wide hover:opacity-80 transition"
+>
+  FUTARI
+</Link>
 
         {/* --- Ordinateur --- */}
         <div className="hidden md:flex space-x-8 text-lg items-center relative">
@@ -117,26 +120,40 @@ export default function Navbar() {
       </nav>
 
       {/* --- Menu déroulant mobile (beige foncé) --- */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="md:hidden bg-[#E8E0D4] text-black py-4 px-6 space-y-4 shadow-lg"
-          >
-            {categories.map(([name, id]) => (
-              <button
-                key={id}
-                onClick={() => handleCategoryClick(id)}
-                className="block w-full text-left hover:text-[#b12c20] transition"
-              >
-                {name}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+     <AnimatePresence>
+  {menuOpen && (
+    <motion.div
+      initial={{ opacity: 0, y: -15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -15 }}
+      className="
+        md:hidden 
+        absolute right-4 top-16 
+        w-64 
+        max-h-80 
+        overflow-y-auto 
+        bg-white 
+        text-[#b12c20]
+        border border-gray-200
+        rounded-xl 
+        shadow-xl 
+        py-3 
+        z-50
+      "
+    >
+      {categories.map(([name, id]) => (
+        <button
+          key={id}
+          onClick={() => handleCategoryClick(id)}
+          className="w-full text-left px-4 py-2 hover:bg-gray-50 transition"
+        >
+          {name}
+        </button>
+      ))}
+    </motion.div>
+  )}
+</AnimatePresence>
+
     </header>
   );
 }
