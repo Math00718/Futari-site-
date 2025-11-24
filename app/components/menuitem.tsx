@@ -47,13 +47,24 @@ export default function MenuItem({
 
   return (
     <div className="bg-white rounded-2xl shadow p-5 relative flex flex-col items-center text-center">
+      
+      {/* IMAGE AVEC TAILLE SPÉCIALE POUR 3 ITEMS */}
       {img && (
         <Image
           src={img}
           alt={name}
           width={600}
           height={400}
-          className="rounded-lg mb-4 object-cover mx-auto"
+          className={`
+            rounded-lg mb-4 object-cover mx-auto
+            ${
+              id === "veggie-california" ||
+              id === "veggie-futomaki" ||
+              id === "veggie-spring"
+                ? "h-[250px] w-full"
+                : ""
+            }
+          `}
         />
       )}
 
@@ -65,6 +76,7 @@ export default function MenuItem({
 
       {/* --- Bouton toujours aligné en bas --- */}
       <div className="mt-auto flex justify-center">
+
         {/* --- POKE (modal obligatoire) --- */}
         {isPoke && (
           <>

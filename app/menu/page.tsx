@@ -249,30 +249,30 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       ["I2", "Tranches de Thon Avocat", "Riz vinaigré garni de thon et avocat", 15.0],
       ["I3", "Tranches de Saumon Thon Avocat", "Mélange saumon-thon sur riz vinaigré", 15.0],
     ].map(([id, name, desc, price]) => (
-   <div
-  key={id}
-  className="bg-white rounded-2xl shadow p-5 text-center flex flex-col"
-  style={{ height: "330px" }} // hauteur fixe pour aligner les boutons
->
-  <h3 className="text-xl font-semibold">{`${id} – ${name}`}</h3>
+      <div
+        key={id}
+        className="bg-white rounded-2xl shadow p-5 text-center flex flex-col"
+      >
+        <h3 className="text-xl font-semibold">{`${id} – ${name}`}</h3>
 
-  <p className="text-gray-600 mt-2 flex-grow">{desc}</p>
+        <p className="text-gray-600 mt-2 flex-grow">{desc}</p>
 
-  <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
+        <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
 
-  <div className="mt-auto">
-    <QuantityControl
-      value={items[String(id)]?.qty || 0}
-      onInc={() =>
-        inc(String(id), { name: String(name), price: Number(price) })
-      }
-      onDec={() => dec(String(id))}
-    />
-  </div>
-</div>
+        <div className="mt-auto">
+          <QuantityControl
+            value={items[String(id)]?.qty || 0}
+            onInc={() =>
+              inc(String(id), { name: String(name), price: Number(price) })
+            }
+            onDec={() => dec(String(id))}
+          />
+        </div>
+      </div>
     ))}
   </div>
 </section>
+
 
 
       {/* --- Section Maki California --- */}
@@ -317,63 +317,62 @@ const [openModal, setOpenModal] = useState<string | null>(null);
   </div>
 </section>
 
-      {/* --- Section California Roll --- */}
-      <section id="california-roll" className="py-16 px-6">
-        <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">
-          California Roll
-        </h2>
-        <p className="text-center font-bold text-black-600 mb-8">Servis par 9 pièces</p>
+     {/* --- Section California Roll --- */}
+<section id="california-roll" className="py-16 px-6">
+  <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">
+    California Roll
+  </h2>
+  <p className="text-center font-bold text-black-600 mb-8">Servis par 9 pièces</p>
 
-        <div className="flex justify-center mb-10">
-          <Image
-            src="/menu/california-roll.jpg"
-            alt="Assortiment California Roll"
-            width={500}
-            height={350}
-            className="rounded-2xl object-cover shadow-lg"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-  {[
-    ["F1", "Classic California Roll (surimi, concombre, avocat)", 6.9],
-    ["F2", "Spicy California Roll", 7.6],
-    ["F3", "Crunch California Roll", 7.6],
-    ["F4", "Fromage California Roll", 7.6],
-    ["F5", "Wagame California Roll", 7.6],
-    ["F8", "California Roll au Saumon", 8.9],
-    ["F9", "California Roll au Thon", 8.9],
-    ["F10", "California Roll aux Crevettes", 9.3],
-    ["F11", "California Roll au Poulet", 8.8],
-    ["F12", "California Roll au Thon Mayo", 8.8],
-    ["F13", "California Roll aux Ebi Frits", 9.5],
-  ].map(([id, name, price]) => {
-    const sid = String(id);
-    const p = Number(price);
-
-    return (
-      <div
-  key={sid}
-  className="bg-white rounded-2xl shadow p-5 text-center flex flex-col justify-between h-full min-h-[220px]"
->
-
-        <h3 className="text-xl font-semibold">{`${sid} – ${name}`}</h3>
-        <p className="mt-2 font-bold">{p.toFixed(2)} €</p>
-
-       
-  <div className="mt-auto flex justify-center">
-  <QuantityControl
-    value={items[sid]?.qty ?? 0}
-    onInc={() => inc(sid, { name: String(name), price: p })}
-    onDec={() => dec(sid)}
-  />
+  <div className="flex justify-center mb-10">
+    <Image
+      src="/menu/california-roll.jpg"
+      alt="Assortiment California Roll"
+      width={500}
+      height={350}
+      className="rounded-2xl object-cover shadow-lg"
+    />
   </div>
-</div>
-    );
-  })}
-</div>
 
-      </section>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    {[
+      ["F1", "Classic California Roll (surimi, concombre, avocat)", 6.9],
+      ["F2", "Spicy California Roll", 7.6],
+      ["F3", "Crunch California Roll", 7.6],
+      ["F4", "Fromage California Roll", 7.6],
+      ["F5", "Wagame California Roll", 7.6],
+      ["F8", "California Roll au Saumon", 8.9],
+      ["F9", "California Roll au Thon", 8.9],
+      ["F10", "California Roll aux Crevettes", 9.3],
+      ["F11", "California Roll au Poulet", 8.8],
+      ["F12", "California Roll au Thon Mayo", 8.8],
+      ["F13", "California Roll aux Ebi Frits", 9.5],
+    ].map(([id, name, price]) => {
+      const sid = String(id);
+      const p = Number(price);
+
+      return (
+        <div
+          key={sid}
+          className="bg-white rounded-2xl shadow p-5 text-center flex flex-col"
+        >
+          <h3 className="text-xl font-semibold">{`${sid} – ${name}`}</h3>
+
+          <p className="mt-2 font-bold">{p.toFixed(2)} €</p>
+
+          <div className="mt-auto flex justify-center">
+            <QuantityControl
+              value={items[sid]?.qty ?? 0}
+              onInc={() => inc(sid, { name: String(name), price: p })}
+              onDec={() => dec(sid)}
+            />
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</section>
+
 
       {/* --- Section Spring Roll --- */}
       <section id="spring-roll" className="py-16 px-6">
@@ -529,7 +528,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       </section>
      {/* --- Section Menu Végétarien --- */}
 <section id="menu-vegetarien" className="py-16 px-6">
-  <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">
+  <h2 className="text-2xl font-bold text-[#B51E1E] mb-10 text-center">
     Menu Végétarien
   </h2>
 
@@ -944,7 +943,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
 
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto justify-items-center">
     {[
-      ["Riz blanc chaud", 2.5, false],
+      ["Riz blanc chaud", 2.5, true],
       ["Riz vinaigré", 3.5, true],
       ["Edamame", 4.5, true],
       ["Wakame", 4.5, true],
