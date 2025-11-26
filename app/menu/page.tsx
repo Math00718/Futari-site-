@@ -704,16 +704,6 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       variants={["Concombre-Fromage", "Avocat-Fromage", "Concombre-Carotte-Avocat"]}
     />
 
-    {/* 7) California Veggie Roll (9 pcs) — POPUP */}
-    <MenuItem
-      id="veggie-roll"
-      name="California Veggie Roll (9 pcs)"
-      desc="Classic 6,90 € – Crunch/Spicy/Fromage/Wakame 7,50 €"
-      price={6.9}
-      img="/menu/veggie-roll.jpg"
-      variants={["Classic", "Crunch", "Spicy", "Fromage", "Wakame"]}
-    />
-
     {/* Les 3 autres SANS POPUP — ALIGNÉS EN BAS */}
 <div className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
   <Image
