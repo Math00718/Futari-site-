@@ -13,7 +13,7 @@ type Props = {
   price: number;
   img?: string;
   variants?: string[];
-  extra?: any;     // poke etc
+  extra?: Record<string, unknown>;
   perPiece?: boolean;
   variantPrices?: Record<string, number>;
   pieces?: number; // optionnel

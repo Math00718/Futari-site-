@@ -126,10 +126,10 @@ export default function PanierPage() {
 
                 {item.details && (
   <div style={{ color: "#444", fontSize: 12, marginTop: 4 }}>
-    {Object.entries(item.details)
-      .filter(([_, arr]) => Array.isArray(arr) && arr.length > 0)
-      .map(([cat, arr]) => arr.join(", "))
-      .join(" • ")}
+    {Object.values(item.details)
+  .filter(arr => Array.isArray(arr) && arr.length > 0)
+  .map(arr => arr.join(", "))
+  .join(" • ")}
   </div>
 )}
                 {typeof item.price === "number" && (
