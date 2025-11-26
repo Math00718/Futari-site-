@@ -192,40 +192,57 @@ const [openModal, setOpenModal] = useState<string | null>(null);
 
 
 
-      {/* --- Section Sashimi --- */}
+     {/* --- Section Sashimi --- */}
 <section id="sashimi" className="py-16 px-6">
   <h2 className="text-4xl font-bold text-[#B51E1E] mb-4 text-center">
     Sashimi
   </h2>
-  <p className="text-center text-blck-700 text-lg font-bold mb-10">
+
+  <p className="text-center text-black-700 text-lg font-bold mb-10">
     Servis par 7 pièces
   </p>
 
   <div className="flex flex-wrap justify-center gap-10 max-w-5xl mx-auto">
     {[
-      ["D1", "Sashimi Saumon", "7 tranches de saumon frais", 8.6, "/menu/sashimi-saumon.jpg"],
-      ["D2", "Sashimi Thon", "7 tranches de thon rouge", 8.9, "/menu/sashimi-thon.jpg"],
-    ].map(([id, name, desc, price, img]) => (
-      <div key={id} className="bg-white rounded-2xl shadow p-6 w-80 text-center">
-        <Image
-          src={String(img)}
-          alt={String(name)}
-          width={400}
-          height={300}
-          className="rounded-xl mb-4 object-cover"
-        />
-        <h3 className="text-xl font-semibold mb-1">{`${id} – ${name}`}</h3>
-        <p className="text-gray-600 mb-2">{String(desc)}</p>
-        <p className="text-black font-semibold mb-3">{Number(price).toFixed(2)} €</p>
-        <QuantityControl
-          value={items[String(id)]?.qty || 0}
-          onInc={() => inc(String(id), { name: String(name), price: Number(price) })}
-          onDec={() => dec(String(id))}
-        />
+      ["D1", "Sashimi Saumon (7 tranches)", 8.6, "/menu/sashimi-saumon.jpg"],
+      ["D2", "Sashimi Thon (7 tranches)", 8.9, "/menu/sashimi-thon.jpg"],
+    ].map(([id, name, price, img]) => (
+      <div
+        key={id}
+        className="bg-white rounded-2xl shadow p-6 w-80 text-center flex flex-col justify-between"
+      >
+        {/* Image, titre, prix */}
+        <div className="flex flex-col items-center mb-4">
+          <Image
+            src={String(img)}
+            alt={String(name)}
+            width={400}
+            height={300}
+            className="rounded-xl mb-4 object-cover"
+          />
+
+          <h3 className="text-xl font-semibold mb-1">{`${id} – ${name}`}</h3>
+
+          <p className="text-black font-semibold">
+            {Number(price).toFixed(2)} €
+          </p>
+        </div>
+
+        {/* Boutons + / - alignés */}
+        <div className="mt-auto flex justify-center">
+          <QuantityControl
+            value={items[String(id)]?.qty || 0}
+            onInc={() =>
+              inc(String(id), { name: String(name), price: Number(price) })
+            }
+            onDec={() => dec(String(id))}
+          />
+        </div>
       </div>
     ))}
   </div>
 </section>
+
 
 
       {/* --- Section Chirashi --- */}
@@ -309,7 +326,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
         <p className="mt-2 font-bold">5,90 €</p>
         <QuantityControl
           value={items[id]?.qty || 0}
-          onInc={() => inc(id, { name, price: 5.9 })}
+          onInc={() => inc(id, { name, price: 5.9, pieces: 8 })}
           onDec={() => dec(id)}
         />
       </div>
@@ -317,7 +334,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
   </div>
 </section>
 
-     {/* --- Section California Roll --- */}
+   {/* --- Section California Roll --- */}
 <section id="california-roll" className="py-16 px-6">
   <h2 className="text-4xl font-bold text-[#B51E1E] mb-10 text-center">
     California Roll
@@ -335,43 +352,125 @@ const [openModal, setOpenModal] = useState<string | null>(null);
   </div>
 
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-    {[
-      ["F1", "Classic California Roll (surimi, concombre, avocat)", 6.9],
-      ["F2", "Spicy California Roll", 7.6],
-      ["F3", "Crunch California Roll", 7.6],
-      ["F4", "Fromage California Roll", 7.6],
-      ["F5", "Wagame California Roll", 7.6],
-      ["F8", "California Roll au Saumon", 8.9],
-      ["F9", "California Roll au Thon", 8.9],
-      ["F10", "California Roll aux Crevettes", 9.3],
-      ["F11", "California Roll au Poulet", 8.8],
-      ["F12", "California Roll au Thon Mayo", 8.8],
-      ["F13", "California Roll aux Ebi Frits", 9.5],
-    ].map(([id, name, price]) => {
-      const sid = String(id);
-      const p = Number(price);
 
-      return (
-        <div
-          key={sid}
-          className="bg-white rounded-2xl shadow p-5 text-center flex flex-col"
-        >
-          <h3 className="text-xl font-semibold">{`${sid} – ${name}`}</h3>
+    {/* F1 — inchangé */}
+    <div className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
+      <h3 className="text-xl font-semibold">F1 – Classic California Roll (surimi, concombre, avocat)</h3>
+      <p className="mt-2 font-bold">6,90 €</p>
+      <div className="mt-auto flex justify-center">
+        <QuantityControl
+          value={items["F1"]?.qty ?? 0}
+          onInc={() => inc("F1", { name: "Classic California Roll (surimi, concombre, avocat)", price: 6.9, pieces: 9 })}
+          onDec={() => dec("F1")}
+        />
+      </div>
+    </div>
 
-          <p className="mt-2 font-bold">{p.toFixed(2)} €</p>
+    {/* F2 — inchangé */}
+    <div className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
+      <h3 className="text-xl font-semibold">F2 – Spicy California Roll (surimi, concombre, avocat)</h3>
+      <p className="mt-2 font-bold">7,60 €</p>
+      <div className="mt-auto flex justify-center">
+        <QuantityControl
+          value={items["F2"]?.qty ?? 0}
+          onInc={() => inc("F2", { name: "Spicy California Roll", price: 7.6, pieces: 9 })}
+          onDec={() => dec("F2")}
+        />
+      </div>
+    </div>
 
-          <div className="mt-auto flex justify-center">
-            <QuantityControl
-              value={items[sid]?.qty ?? 0}
-              onInc={() => inc(sid, { name: String(name), price: p })}
-              onDec={() => dec(sid)}
-            />
-          </div>
-        </div>
-      );
-    })}
+    {/* F3 — inchangé */}
+    <div className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
+      <h3 className="text-xl font-semibold">F3 – Crunch California Roll (surimi, concombre, avocat)</h3>
+      <p className="mt-2 font-bold">7,60 €</p>
+      <div className="mt-auto flex justify-center">
+        <QuantityControl
+          value={items["F3"]?.qty ?? 0}
+          onInc={() => inc("F3", { name: "Crunch California Roll", price: 7.6, pieces: 9 })}
+          onDec={() => dec("F3")}
+        />
+      </div>
+    </div>
+
+    {/* F4 — inchangé */}
+    <div className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
+      <h3 className="text-xl font-semibold">F4 – Fromage California Roll (surimi, concombre, avocat)</h3>
+      <p className="mt-2 font-bold">7,60 €</p>
+      <div className="mt-auto flex justify-center">
+        <QuantityControl
+          value={items["F4"]?.qty ?? 0}
+          onInc={() => inc("F4", { name: "Fromage California Roll", price: 7.6, pieces: 9 })}
+          onDec={() => dec("F4")}
+        />
+      </div>
+    </div>
+
+    {/* F5 — inchangé */}
+    <div className="bg-white rounded-2xl shadow p-5 text-center flex flex-col">
+      <h3 className="text-xl font-semibold">F5 – Wagame California Roll (surimi, concombre, avocat)</h3>
+      <p className="mt-2 font-bold">7,60 €</p>
+      <div className="mt-auto flex justify-center">
+        <QuantityControl
+          value={items["F5"]?.qty ?? 0}
+          onInc={() => inc("F5", { name: "Wagame California Roll", price: 7.6, pieces: 9 })}
+          onDec={() => dec("F5")}
+        />
+      </div>
+    </div>
+
+    {/* F8 → F13 — popup avec MenuItem */}
+    
+    <MenuItem
+      id="F8"
+      name="F8 California Roll au Saumon"
+      price={8.9}
+      variants={["Classic", "Crunch", "Spicy", "Wakame", "Fromage"]}
+      pieces={9}
+    />
+
+    <MenuItem
+      id="F9"
+      name="F9 California Roll au Thon"
+      price={8.9}
+      variants={["Classic", "Crunch", "Spicy", "Wakame", "Fromage"]}
+      pieces={9}
+    />
+
+    <MenuItem
+      id="F10"
+      name="F10 California Roll aux Crevettes"
+      price={9.3}
+      variants={["Classic", "Crunch", "Spicy", "Wakame", "Fromage"]}
+      pieces={9}
+    />
+
+    <MenuItem
+      id="F11"
+      name="F11 California Roll au Poulet"
+      price={8.8}
+      variants={["Classic", "Crunch", "Spicy", "Wakame", "Fromage"]}
+      pieces={9}
+    />
+
+    <MenuItem
+      id="F12"
+      name="F12 California Roll au Thon Mayo"
+      price={8.8}
+      variants={["Classic", "Crunch", "Spicy", "Wakame", "Fromage"]}
+      pieces={9}
+    />
+
+    <MenuItem
+      id="F13"
+      name="F13 California Roll aux Ebi Frits"
+      price={9.5}
+      variants={["Classic", "Crunch", "Spicy", "Wakame", "Fromage"]}
+      pieces={9}
+    />
+
   </div>
 </section>
+
 
 
       {/* --- Section Spring Roll --- */}
@@ -417,7 +516,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
                 <p className="mt-2 font-bold">6,60 €</p>
                 <QuantityControl
                   value={items[id]?.qty || 0}
-                  onInc={() => inc(id, { name, price: 6.6 })}
+                  onInc={() => inc(id, { name, price: 6.6, pieces: 8 })}
                   onDec={() => dec(id)}
                 />
               </div>
@@ -436,14 +535,14 @@ const [openModal, setOpenModal] = useState<string | null>(null);
           {[
             {
               id: "g1",
-              name: "Rainbow Mix (8 pcs)",
+              name: "G1 Rainbow Mix (8 pcs)",
               desc: "(Saumon, thon, avocat, concombre)",
               price: 13.5,
               img: "/menu/special-roll-g1.jpg",
             },
             {
               id: "g3",
-              name: "Saumon Roll’n Fromage (9 pcs)",
+              name: "G3 Saumon Roll’n Fromage (9 pcs)",
               desc: "(Saumon, fromage, riz)",
               price: 13.8,
               img: "/menu/special-roll-g3.jpg",
@@ -479,28 +578,28 @@ const [openModal, setOpenModal] = useState<string | null>(null);
           {[
             {
               id: "combo-a",
-              name: "Combo A",
+              name: "Combo A (9 pcs)",
               desc: "3 Spicy Cali Surimi • 3 Crunch Cali Surimi • 3 Fromage Cali Surimi",
               price: 8.5,
               img: "/menu/combo-a.jpg",
             },
             {
               id: "combo-b",
-              name: "Combo B",
-              desc: "8 Maki Saumon • 2 Crunch Cali • 2 Nigiri Saumon",
+              name: "Combo B (12 pcs)",
+              desc: "8 Maki Surimi • 2 Crunch Cali • 2 Nigiri Saumon",
               price: 8.9,
               img: "/menu/combo-b.jpg",
             },
             {
               id: "combo-c",
-              name: "Combo C",
+              name: "Combo C (9 pcs)",
               desc: "3 Maki Cali Saumon Avocat • 2 Nigiri Saumon • 2 Nigiri Thon • 2 Nigiri Crevette",
               price: 11.4,
               img: "/menu/combo-c.jpg",
             },
             {
               id: "combo-d",
-              name: "Combo D",
+              name: "Combo D (9 pcs)",
               desc: "3 Spring Cali Saumon • 3 Crunch Cali Saumon • 3 Fromage Cali Saumon",
               price: 9.5,
               img: "/menu/combo-d.jpg",
@@ -538,47 +637,58 @@ const [openModal, setOpenModal] = useState<string | null>(null);
     <MenuItem
       id="veggie-nigiri"
       name="Nigiri Veggie"
-      desc="Inari / Avocat / Omelette / Mangue – 1,70 €/pièce"
+      desc="Inari / Avocat / Omelette / Mangue"
       price={1.7}
       img="/menu/veggie-nigiri.jpg"
       variants={["Inari", "Avocat", "Omelette", "Mangue"]}
+      perPiece={true}
     />
 
     {/* 2) Temaki Veggie — POPUP */}
     <MenuItem
       id="veggie-temaki"
       name="Temaki Veggie"
-      desc="Concombre-Avocat-Fromage / Concombre-Mangue-Fromage – 5,30 €/pièce"
+      desc="Concombre-Avocat-Fromage / Concombre-Mangue-Fromage"
       price={5.3}
       img="/menu/veggie-temaki.jpg"
       variants={["Concombre-Avocat-Fromage", "Concombre-Mangue-Fromage"]}
+      perPiece={true}
     />
 
     {/* 3) Maki Veggie (8 pcs) — POPUP */}
     <MenuItem
       id="veggie-maki"
       name="Maki Veggie (8 pcs)"
-      desc="Concombre / Avocat / Mangue / Fromage / Omelette – 4,60 €"
+      desc="Concombre / Avocat / Mangue / Fromage / Omelette"
       price={4.6}
       img="/menu/veggie-maki.jpg"
       variants={["Concombre", "Avocat", "Mangue", "Fromage", "Omelette"]}
+      perPiece={true}
     />
 
-    {/* 4) Maki California Veggie (8 pcs) — POPUP */}
-    <MenuItem
-      id="veggie-california"
-      name="Maki California Veggie (8 pcs)"
-      desc="Concombre-Fromage / Avocat-Fromage / Concombre-Avocat-Carotte – 5,30 €"
-      price={5.3}
-      img="/menu/veggie-california.jpg"
-      variants={["Concombre-Fromage", "Avocat-Fromage", "Concombre-Avocat-Carotte"]}
-    />
+    {/* 4) Maki California Veggie (9 pcs) — POPUP */}
+   <MenuItem
+  id="veggie-roll"
+  name="California Veggie Roll (9 pcs)"
+  desc="Classic 6,90 € – Crunch/Spicy/Fromage/Wakame 7,50 €"
+  price={6.9}
+  img="/menu/veggie-roll.jpg"
+  variants={["Classic", "Crunch", "Spicy", "Fromage", "Wakame"]}
+  variantPrices={{
+    Classic: 6.9,
+    Crunch: 7.5,
+    Spicy: 7.5,
+    Fromage: 7.5,
+    Wakame: 7.5,
+  }}
+/>
+
 
     {/* 5) Futomaki Veggie (4 pcs) — POPUP */}
     <MenuItem
       id="veggie-futomaki"
       name="Futomaki Veggie (4 pcs)"
-      desc="Concombre • Avocat • Mangue • Radis Jaune • Carotte • Omelette – 7,50 €"
+      desc="Concombre • Avocat • Mangue • Radis Jaune • Carotte • Omelette"
       price={7.5}
       img="/menu/veggie-futomaki.jpg"
       variants={["Concombre", "Avocat", "Mangue", "Radis Jaune", "Carotte", "Omelette"]}
@@ -588,7 +698,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
     <MenuItem
       id="veggie-spring"
       name="Spring Roll Veggie (8 pcs)"
-      desc="Concombre-Fromage / Avocat-Fromage / Concombre-Carotte-Avocat – 6,10 €"
+      desc="Concombre-Fromage / Avocat-Fromage / Concombre-Carotte-Avocat"
       price={6.1}
       img="/menu/veggie-spring.jpg"
       variants={["Concombre-Fromage", "Avocat-Fromage", "Concombre-Carotte-Avocat"]}
@@ -877,7 +987,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
               <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
               <QuantityControl
   value={items[String(id)]?.qty || 0}
-  onInc={() => inc(String(id), { name: String(name), price: Number(price) })}
+  onInc={() => inc(String(id), { name: String(name), price: Number(price), pieces: 8 })}
   onDec={() => dec(String(id))}
 />
 
@@ -915,7 +1025,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
                 <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
                 <QuantityControl
   value={items[String(id)]?.qty || 0}
-  onInc={() => inc(String(id), { name: String(name), price: Number(price) })}
+  onInc={() => inc(String(id), { name: String(name), price: Number(price), pieces: 4 })}
   onDec={() => dec(String(id))}
 />
 
@@ -1029,7 +1139,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
   desc="1 base • 3 protéines • 4 salades • 1 sauce • 1 topping"
   price={16.0}
   img="/menu/poke-large.jpg"
-  variants={[]} 
+  variants={["Créer votre bol"]} 
   extra={{
     type: "poke",
     size: "large",      

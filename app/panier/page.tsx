@@ -120,9 +120,10 @@ export default function PanierPage() {
             >
               <div style={{ maxWidth: "60%" }}>
                 {/* suppression de l'affichage de l'id */}
-                <div style={{ fontWeight: 600, fontSize: 14 }}>
-                  {item.name}
-                </div>
+                <div style={{ fontWeight: 600, fontSize: 14, textTransform: "capitalize" }}>
+  {item.name}
+</div>
+
                 {item.details && (
   <div style={{ color: "#444", fontSize: 12, marginTop: 4 }}>
     {Object.entries(item.details)
