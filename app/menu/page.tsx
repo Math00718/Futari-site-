@@ -606,7 +606,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
             },
           ].map((c) => (
             <div key={c.id} className="bg-white rounded-2xl shadow p-5 w-80 text-center">
-              <Image
+               <Image
                 src={c.img}
                 alt={c.name}
                 width={400}

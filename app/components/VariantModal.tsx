@@ -253,7 +253,6 @@ if (isPoke && pokeSelected.base.length === 0) {
             {variants.map((variant) => {
               const key = `${productId}-${variant}`;
               const qty = selected[key] ?? items[key]?.qty ?? 0;
-              const vPrice = variantPrices?.[variant] ?? price;
 
               return (
                 <div
