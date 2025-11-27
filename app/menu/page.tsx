@@ -163,7 +163,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
     ].map(({ id, name, desc, price, img }) => (
       <div
         key={id}
-        className="bg-white rounded-2xl shadow p-5 text-center w-80 flex flex-col"
+        className="bg-white rounded-2xl shadow p-5 text-center flex flex-col w-full max-w-[320px] mx-auto md:w-80"
       >
         <Image
           src={String(img)}
