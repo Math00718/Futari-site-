@@ -19,10 +19,7 @@ type ExtraData = {
   };
 };
 
-
-
 type SelectedVariants = Record<string, number>;
-
 type PokeSelection = Record<PokeCategory, string[]>;
 
 /* CONFIG */
@@ -74,6 +71,13 @@ const pokeLimits = {
   large: { base: 1, protein: 3, salad: 4, sauce: 1, topping: 1 },
 };
 
+/* Libellés entre parenthèses pour certaines variantes */
+const variantLabels: Record<string, string> = {
+  Classic: " (sésame)",
+  Crunch: " (oignon frit)",
+  Wakame: " (algue verte)",
+};
+
 /* COMPONENT */
 
 export default function VariantModal({
@@ -84,7 +88,7 @@ export default function VariantModal({
   onClose,
   extra,
   variantPrices,
-  pieces, 
+  pieces,
 }: {
   productId: string;
   productName: string;
@@ -93,7 +97,7 @@ export default function VariantModal({
   onClose: () => void;
   extra?: ExtraData;
   variantPrices?: Record<string, number>;
-  pieces?: number; 
+  pieces?: number;
 }) {
   const { items, setQty } = useCart();
 
@@ -109,14 +113,16 @@ export default function VariantModal({
     sauce: [],
     topping: [],
   });
+
   // Préselection automatique de la base si Poké
-if (isPoke && pokeSelected.base.length === 0) {
-  setPokeSelected((prev) => ({
-    ...prev,
-    base: ["Riz vinaigré"],
-  }));
-}
-  /* --- Toggle POKÉ (inchangé) --- */
+  if (isPoke && pokeSelected.base.length === 0) {
+    setPokeSelected((prev) => ({
+      ...prev,
+      base: ["Riz vinaigré"],
+    }));
+  }
+
+  /* --- Toggle POKÉ --- */
   const togglePoke = (cat: PokeCategory, item: string) => {
     const limit = pokeLimits[pokeSize][cat];
     const already = pokeSelected[cat];
@@ -139,7 +145,7 @@ if (isPoke && pokeSelected.base.length === 0) {
 
   /* --- APPLY --- */
   const handleApply = () => {
-    /* --- MODE POKÉ (100% restauré) --- */
+    // MODE POKÉ
     if (isPoke) {
       const hasBase = pokeSelected.base.length >= 1;
       const hasSalad = pokeSelected.salad.length >= 1;
@@ -165,7 +171,7 @@ if (isPoke && pokeSelected.base.length === 0) {
       return;
     }
 
-    /* --- MODE NORMAL (California Veggie Roll) --- */
+    // MODE NORMAL (plateaux, California, etc.)
     Object.entries(selected).forEach(([key, qty]) => {
       if (qty > 0) {
         let variant = "";
@@ -203,51 +209,58 @@ if (isPoke && pokeSelected.base.length === 0) {
         className="bg-white rounded-xl p-6 w-[90%] max-w-md max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-2xl font-semibold mb-4 text-center">
+        <h3 className="text-2xl font-semibold mb-2 text-center">
           {productName}
         </h3>
 
-        {/* --- UI POKÉ (100% restauré) --- */}
+        {/* TEXTE D'INFO POUR LES MENUS / PLATEAUX (non-Poké) */}
+        {!isPoke && pieces && (
+          <p className="text-center text-sm text-gray-600 mb-4">
+            Ce menu est servi par {pieces} pièces. Une seule variante possible
+            pour l&apos;ensemble des pièces (pas de mélange).
+          </p>
+        )}
+
+        {/* --- UI POKÉ --- */}
         {isPoke && (
           <div className="space-y-6">
-            {(Object.entries(pokeOptions) as [
-              PokeCategory,
-              string[]
-            ][]).map(([cat, list]) => (
-              <div key={cat} className="mb-4">
-                <h4 className="font-bold text-lg mb-2 capitalize">
-                  {cat} (max {pokeLimits[pokeSize][cat]})
-                </h4>
+            {(Object.entries(pokeOptions) as [PokeCategory, string[]][]).map(
+              ([cat, list]) => (
+                <div key={cat} className="mb-4">
+                  <h4 className="font-bold text-lg mb-2 capitalize">
+                    {cat} (max {pokeLimits[pokeSize][cat]})
+                  </h4>
 
-                <div className="grid grid-cols-2 gap-2">
-                  {list.map((item) => {
-                    const active = pokeSelected[cat].includes(item);
-                    const limitReached =
-                      pokeSelected[cat].length >= pokeLimits[pokeSize][cat];
+                  <div className="grid grid-cols-2 gap-2">
+                    {list.map((item) => {
+                      const active = pokeSelected[cat].includes(item);
+                      const limitReached =
+                        pokeSelected[cat].length >= pokeLimits[pokeSize][cat];
 
-                    return (
-                      <button
-                        key={item}
-                        onClick={() => togglePoke(cat, item)}
-                        className={`border rounded p-2 text-sm ${
-                          active
-                            ? "bg-[#B51E1E] text-white"
-                            : limitReached
-                            ? "opacity-40 cursor-not-allowed"
-                            : "bg-white"
-                        }`}
-                      >
-                        {item}
-                      </button>
-                    );
-                  })}
+                      return (
+                        <button
+                          key={item}
+                          onClick={() => togglePoke(cat, item)}
+                          className={`border rounded p-2 text-sm ${
+                            active
+                              ? "bg-[#B51E1E] text-white"
+                              : limitReached
+                              ? "opacity-40 cursor-not-allowed"
+                              : "bg-white"
+                          }`}
+                        >
+                          {item}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         )}
 
-        {/* --- UI NORMAL (California Veggie Roll) --- */}
+        {/* --- UI NORMAL (California, plateaux, etc.) --- */}
         {!isPoke && (
           <div className="space-y-3 mb-4">
             {variants.map((variant) => {
@@ -260,15 +273,17 @@ if (isPoke && pokeSelected.base.length === 0) {
                   className="flex justify-between items-center border-b pb-1"
                 >
                   <div className="flex items-center gap-2">
-  <span>{variant}</span>
+                    <span>
+                      {variant}
+                      {variantLabels[variant] ?? ""}
+                    </span>
 
-  {/* Affiche le prix UNIQUEMENT si variantPrices est fourni */}
-  {variantPrices && (
-    <span className="text-xs text-gray-500">
-      {(variantPrices[variant] ?? price).toFixed(2)} €
-    </span>
-  )}
-</div>
+                    {variantPrices && (
+                      <span className="text-xs text-gray-500">
+                        {(variantPrices[variant] ?? price).toFixed(2)} €
+                      </span>
+                    )}
+                  </div>
 
                   <div className="flex items-center gap-2">
                     <button
