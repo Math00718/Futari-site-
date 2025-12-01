@@ -5,6 +5,8 @@ import QuantityControl from "../components/quantitycontrol";
 import { useState } from "react";
 import MenuItem from "../components/menuitem";
 import VariantModal from "../components/VariantModal";
+import SupplItem from "../components/SupplItem";
+
 
 
 // @ts-nocheck
@@ -1042,6 +1044,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
   </div>
 
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto justify-items-center">
+
     {[
       // name, price, vegan, variants?, pieces?
       ["Riz blanc chaud", 2.5, true],
@@ -1052,7 +1055,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       ["Loempia végétarien (6 pcs)", 4.4, true],
       ["Triangles au curry frits (6 pcs)", 4.4, true],
 
-      // ⚠️ NEMS — texte complet + variantes + pieces = 4
+      // NEMS avec variantes
       ["Nems (porc/poulet – 4 pcs)", 4.6, false, ["Porc", "Poulet"], 4],
 
       ["Raviolis japonais poulet (7 pcs)", 6.8, false],
@@ -1062,65 +1065,23 @@ const [openModal, setOpenModal] = useState<string | null>(null);
     ].map(([name, price, vegan, variants, pieces], i) => {
       const id = `supp-${i + 1}`;
       const hasVariants = Array.isArray(variants);
-      const [showModal, setShowModal] = useState(false);
 
       return (
-        <div
-          key={id}
-          className="bg-white rounded-2xl shadow p-5 w-80 text-center flex flex-col"
-        >
-          <h3 className="text-xl font-semibold flex items-center justify-center gap-2">
-            {name}
-            {vegan && (
-              <Image
-                src="/icons/veggie.png"
-                alt="Vegan"
-                width={18}
-                height={18}
-                className="inline-block"
-              />
-            )}
-          </h3>
-
-          <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
-
-          <div className="mt-auto flex justify-center">
-            {/* --- BTN POUR VARIANTES --- */}
-            {hasVariants ? (
-              <button
-                aria-label="Ajouter"
-                onClick={() => setShowModal(true)}
-                style={{ padding: "6px 10px", border: "1px solid #ddd", borderRadius: 6, background: "#fff", cursor: "pointer" }}
-              >
-                +
-              </button>
-            ) : (
-              <QuantityControl
-                value={items[id]?.qty || 0}
-                onInc={() =>
-                  inc(id, { name: String(name), price: Number(price) })
-                }
-                onDec={() => dec(id)}
-              />
-            )}
-          </div>
-
-          {/* --- MODAL DES VARIANTES --- */}
-          {showModal && hasVariants && (
-            <VariantModal
-              productId={id}
-              productName={String(name)}
-              variants={variants}
-              price={Number(price)}
-              onClose={() => setShowModal(false)}
-              pieces={4}  // 👈 ici, toujours un nombre !
-            />
-          )}
-        </div>
+    <SupplItem
+      key={id}
+      id={id}
+      name={String(name)}
+      price={Number(price)}
+      vegan={Boolean(vegan)}
+      variants={hasVariants ? variants : null}
+      pieces={typeof pieces === "number" ? pieces : undefined}
+    />
       );
     })}
+
   </div>
 </section>
+
 
 
 
