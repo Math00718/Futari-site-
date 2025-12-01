@@ -30,7 +30,7 @@ export default function Navbar() {
     ["Gunkan", "gunkan"],
     ["Temaki", "temaki"],
     ["Maki", "maki"],
-    ["Futomaki", "futomaki"],
+    ["Futo Maki", "futo maki"],
     ["Suppléments", "supplements"],
     ["Poké Bowl", "poke-bowl"],
     ["Softs", "soft"],

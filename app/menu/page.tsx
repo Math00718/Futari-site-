@@ -840,8 +840,8 @@ const [openModal, setOpenModal] = useState<string | null>(null);
 
     <div className="flex justify-center gap-10 flex-wrap">
       {[
-        ["Thon Mi-Cuit", 2.7],
-        ["Saumon Mi-Cuit", 2.7],
+        ["Nigiri Thon Mi-Cuit", 2.7],
+        ["Nigiri Saumon Mi-Cuit", 2.7],
       ].map(([name, price]) => {
         const id = String(name).toLowerCase().replace(/\s+/g, "-");
         return (
@@ -987,7 +987,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       </section>
 
       {/* --- Section Futo Maki --- */}
-      <section id="futomaki" className="py-16 px-6">
+      <section id="futo maki" className="py-16 px-6">
         <h2 className="text-4xl font-bold text-[#B51E1E] mb-4 text-center">Futo Maki</h2>
         <p className="text-center font-bold text-black-600 mb-8">Servis par 4 pièces</p>
 
@@ -1025,7 +1025,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
         </div>
       </section>
 
-      {/* --- Section Suppléments --- */}
+{/* --- Section Suppléments --- */}
 <section id="supplements" className="py-16 px-6">
   <h2 className="text-4xl font-bold text-[#B51E1E] mb-6 text-center">
     Suppléments
@@ -1043,6 +1043,7 @@ const [openModal, setOpenModal] = useState<string | null>(null);
 
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto justify-items-center">
     {[
+      // name, price, vegan, variants?, pieces?
       ["Riz blanc chaud", 2.5, true],
       ["Riz vinaigré", 3.5, true],
       ["Edamame", 4.5, true],
@@ -1050,13 +1051,19 @@ const [openModal, setOpenModal] = useState<string | null>(null);
       ["Soupe miso", 3.5, true],
       ["Loempia végétarien (6 pcs)", 4.4, true],
       ["Triangles au curry frits (6 pcs)", 4.4, true],
-      ["Nems (porc/poulet – 4 pcs)", 4.6, false],
+
+      // ⚠️ NEMS — texte complet + variantes + pieces = 4
+      ["Nems (porc/poulet – 4 pcs)", 4.6, false, ["Porc", "Poulet"], 4],
+
       ["Raviolis japonais poulet (7 pcs)", 6.8, false],
       ["Raviolis scampis (7 pcs)", 7.2, false],
       ["Raviolis japonais végétarien (7 pcs)", 7.2, true],
       ["Dim sum cantonais (7 pcs)", 7.9, false],
-    ].map(([name, price, vegan], i) => {
+    ].map(([name, price, vegan, variants, pieces], i) => {
       const id = `supp-${i + 1}`;
+      const hasVariants = Array.isArray(variants);
+      const [showModal, setShowModal] = useState(false);
+
       return (
         <div
           key={id}
@@ -1074,24 +1081,49 @@ const [openModal, setOpenModal] = useState<string | null>(null);
               />
             )}
           </h3>
+
           <p className="mt-2 font-bold">{Number(price).toFixed(2)} €</p>
-<div className="mt-auto flex justify-center">
-          <QuantityControl
-            value={items[String(id)]?.qty || 0}
-            onInc={() =>
-              inc(String(id), {
-                name: String(name ?? ""),
-                price: Number(price ?? 0),
-              })
-            }
-            onDec={() => dec(String(id))}
-          />
-        </div>
+
+          <div className="mt-auto flex justify-center">
+            {/* --- BTN POUR VARIANTES --- */}
+            {hasVariants ? (
+              <button
+                aria-label="Ajouter"
+                onClick={() => setShowModal(true)}
+                style={{ padding: "6px 10px", border: "1px solid #ddd", borderRadius: 6, background: "#fff", cursor: "pointer" }}
+              >
+                +
+              </button>
+            ) : (
+              <QuantityControl
+                value={items[id]?.qty || 0}
+                onInc={() =>
+                  inc(id, { name: String(name), price: Number(price) })
+                }
+                onDec={() => dec(id)}
+              />
+            )}
+          </div>
+
+          {/* --- MODAL DES VARIANTES --- */}
+          {showModal && hasVariants && (
+            <VariantModal
+              productId={id}
+              productName={String(name)}
+              variants={variants}
+              price={Number(price)}
+              onClose={() => setShowModal(false)}
+              pieces={4}  // 👈 ici, toujours un nombre !
+            />
+          )}
         </div>
       );
     })}
   </div>
 </section>
+
+
+
 
 {/* --- Section Poké Bowl --- */}
 <section id="poke-bowl" className="py-16 px-6">
