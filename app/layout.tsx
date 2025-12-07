@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "./Navbar";
 import { CartProvider } from "./context/cartcontext";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   title: "Futari – Traiteur Japonais et Coréen",
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <footer className="bg-[#fff3dc] text-center text-sm py-6 mt-20 text-[#b12c20] border-t border-[#b12c20]/20">
             © {new Date().getFullYear()} Futari — Traiteur Japonais
           </footer>
+          <Analytics />
         </body>
       </CartProvider>
     </html>
