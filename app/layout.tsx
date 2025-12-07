@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta charSet="utf-8" />
+        <meta charSet="utf-8" />       
       </head>
 
       <CartProvider>
@@ -61,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <footer className="bg-[#fff3dc] text-center text-sm py-6 mt-20 text-[#b12c20] border-t border-[#b12c20]/20">
             © {new Date().getFullYear()} Futari — Traiteur Japonais
           </footer>
+         <Analytics />
         </body>
       </CartProvider>
     </html>
