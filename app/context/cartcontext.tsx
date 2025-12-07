@@ -38,9 +38,7 @@ const LS_KEY = "futari_cart_v1";
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartState>({});
 
-  /* --------------------------------------
-     LOCAL STORAGE
-  -------------------------------------- */
+  /* LOCAL STORAGE */
   useEffect(() => {
     try {
       const raw = localStorage.getItem(LS_KEY);
@@ -64,54 +62,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items]
   );
 
-  /* --------------------------------------
-     HELPERS
-  -------------------------------------- */
+  /* HELPERS */
   const cleanSpaces = (s: string) => s.replace(/\s+/g, " ").trim();
   const dedupeWords = (s: string) => s.replace(/\b(\w+)\s+\1\b/gi, "$1");
 
-  /* --------------------------------------
-     INFER TYPE (PREFIXES AUTO)
-  -------------------------------------- */
-  const inferTypeById = (id: string, rawNameLower: string) => {
+  /* PREFIX INFERENCE */
+  const inferTypeById = (id: string, rawLower: string) => {
     const idCode = (id.split("-")[0] || "").toUpperCase();
     const letters = idCode.replace(/\d+/g, "");
     const digits = idCode.replace(/\D+/g, "");
 
-    // Ne pas préfixer Nigiri
-    if (/^nigiri-/i.test(id)) return { idCode: "", typeWord: "" };
+    if (/^veggie-/i.test(id)) return { idCode: "", typeWord: "" };
 
-    // Ne pas préfixer FUTOMAKI
+    if (/^nigiri-/i.test(id)) return { idCode: "", typeWord: "" };
     if (/^futo-/i.test(id)) return { idCode: "", typeWord: "" };
 
     if (
       /(spring roll|california roll|maki california|nigiri|temaki|sashimi|gunkan|futomaki|combo)/i.test(
-        rawNameLower
+        rawLower
       )
     )
       return { idCode, typeWord: "" };
 
-    if (/^H\d+$/.test(idCode)) return { idCode, typeWord: "Spring Roll" };
-    if (/^F\d+$/.test(idCode)) return { idCode, typeWord: "California Roll" };
-    if (/^A\d+$/.test(idCode)) return { idCode, typeWord: "Nigiri" };
-    if (/^B\d+$/.test(idCode)) return { idCode, typeWord: "Gunkan" };
-    if (/^C\d+$/.test(idCode)) return { idCode, typeWord: "Temaki" };
-    if (/^D\d+$/.test(idCode)) return { idCode, typeWord: "Sashimi" };
-    if (/^E\d+$/.test(idCode)) {
-      const n = parseInt(digits || "0", 10);
+    if (/^H\d+$/i.test(idCode)) return { idCode, typeWord: "Spring Roll" };
+    if (/^F\d+$/i.test(idCode)) return { idCode, typeWord: "California Roll" };
+    if (/^A\d+$/i.test(idCode)) return { idCode, typeWord: "Nigiri" };
+    if (/^B\d+$/i.test(idCode)) return { idCode, typeWord: "Gunkan" };
+    if (/^C\d+$/i.test(idCode)) return { idCode, typeWord: "Temaki" };
+    if (/^D\d+$/i.test(idCode)) return { idCode, typeWord: "Sashimi" };
+    if (/^E\d+$/i.test(idCode)) {
+      const n = Number(digits || "0");
       return { idCode, typeWord: n >= 10 ? "Maki California" : "Maki" };
     }
-
-    if (/^g\d+/i.test(id)) return { idCode, typeWord: "" };
-    if (/^combo-/i.test(id)) return { idCode: "", typeWord: "Combo" };
 
     return { idCode: letters && digits ? idCode : "", typeWord: "" };
   };
 
-  /* --------------------------------------
-     SET QTY
-     → AJOUT DE LA CORRECTION NEMS
-  -------------------------------------- */
+  /* SET QTY */
   const setQty = (id: string, qty: number, data: Partial<CartItem> = {}) => {
     setItems((prev) => {
       const next = { ...prev };
@@ -125,29 +112,69 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       let rawName = cleanSpaces(String(data.name ?? base.name ?? ""));
       const lower = rawName.toLowerCase();
+      const pieces = data.pieces ?? base.pieces;
 
-      /* --------------------------------------
-         🟢 CORRECTION NEMS
-         Si le nom contient "(porc/poulet – 4 pcs)"
-         → On l’enlève avant de générer le nom final.
-      -------------------------------------- */
-      if (lower.includes("nems")) {
-        rawName = rawName.replace(/\(.*?\)/g, "").trim();
+      /* RÈGLE VEGGIE SPÉCIALE */
+      if (id.startsWith("veggie-")) {
+        const cleaned = cleanSpaces(
+          rawName.replace(/veggie/gi, "").replace(/\s+/g, " ")
+        );
+        const final = `Veggie ${cleaned}`;
+        const nameWithPieces =
+          pieces && pieces > 0 ? `${final} (${pieces} pcs)` : final;
+
+        next[id] = {
+          ...base,
+          ...data,
+          id,
+          qty,
+          name: nameWithPieces,
+          price: Number(data.price ?? base.price ?? 0),
+          pieces,
+        };
+        return next;
       }
-      /* -------------------------------------- */
+    /* RÈGLE SPÉCIALE NEMS */
+if (/^nems/i.test(rawName) || rawName.toLowerCase().includes("porc/poulet")) {
+  const pieces = data.pieces ?? base.pieces ?? 4;
 
+  // extrait le dernier porc/poulet dans la chaîne
+  const typeMatches = rawName.match(/(porc|poulet)/gi);
+  const type = typeMatches ? typeMatches[typeMatches.length - 1] : "";
+
+  const final = `Nems ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+  const nameWithPieces = `${final} (${pieces} pcs)`;
+
+  next[id] = {
+    ...base,
+    ...data,
+    id,
+    qty,
+    name: nameWithPieces,
+    price: Number(data.price ?? base.price ?? 0),
+    pieces,
+  };
+
+  return next;
+}
+
+
+
+
+      /* NORMAL FLOW */
       const { idCode, typeWord } = inferTypeById(id, lower);
       const baseName = cleanSpaces(dedupeWords(rawName));
 
       const parts: string[] = [];
-      if (idCode) parts.push(idCode);
+      if (idCode && !baseName.toLowerCase().startsWith(idCode.toLowerCase()))
+        parts.push(idCode);
+
       if (typeWord && !new RegExp(typeWord, "i").test(baseName))
         parts.push(typeWord);
+
       parts.push(baseName);
 
       const finalName = cleanSpaces(parts.join(" "));
-      const pieces = data.pieces ?? base.pieces;
-
       const nameWithPieces =
         pieces && pieces > 0 ? `${finalName} (${pieces} pcs)` : finalName;
 
@@ -165,108 +192,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  /* --------------------------------------
-     INC (AJOUT)
-     → MODIFIÉ POUR FUTOMAKI
-  -------------------------------------- */
+  /* INC */
   const inc = (id: string, data: Partial<CartItem> = {}) => {
-    setItems((prev) => {
-      const cur = prev[id]?.qty || 0;
-      const base = prev[id] || { id, name: "", price: 0, qty: 0 };
-
-      // Menus M1..M10
-      if (/^m\d+$/i.test(id)) {
-        return {
-          ...prev,
-          [id]: {
-            ...base,
-            ...data,
-            id,
-            name: String(data.name ?? base.name),
-            qty: cur + 1,
-            price: Number(data.price ?? base.price ?? 0),
-            pieces: data.pieces ?? base.pieces,
-          },
-        };
-      }
-
-      const rawName = cleanSpaces(String(data.name ?? base.name ?? ""));
-      const lower = rawName.toLowerCase();
-
-      // Futo → renommer dans le panier
-      if (/^futo-/i.test(id)) {
-        const ingredient = cleanSpaces(rawName.replace(/^futo\s+/i, ""));
-        const baseName = ingredient || rawName;
-
-        const pieces = data.pieces ?? base.pieces;
-        const finalName = cleanSpaces(`Futomaki ${baseName}`);
-        const nameWithPieces =
-          pieces && pieces > 0 ? `${finalName} (${pieces} pcs)` : finalName;
-
-        return {
-          ...prev,
-          [id]: {
-            ...base,
-            ...data,
-            id,
-            name: nameWithPieces,
-            qty: cur + 1,
-            price: Number(data.price ?? base.price ?? 0),
-            pieces,
-          },
-        };
-      }
-
-      const isVeggie =
-        lower.includes("veggie") || id.toLowerCase().includes("veggie");
-
-      let finalName = "";
-
-      if (isVeggie) {
-        const withoutVeggie = cleanSpaces(
-          dedupeWords(rawName.replace(/veggie/gi, ""))
-        );
-        finalName = cleanSpaces(`Veggie ${withoutVeggie}`);
-      } else {
-        const { idCode, typeWord } = inferTypeById(id, lower);
-        const baseName = cleanSpaces(dedupeWords(rawName));
-        const parts: string[] = [];
-        if (idCode) parts.push(idCode);
-        if (typeWord && !new RegExp(typeWord, "i").test(baseName))
-          parts.push(typeWord);
-        parts.push(baseName);
-        finalName = cleanSpaces(parts.join(" "));
-      }
-
-      const pieces = data.pieces ?? base.pieces;
-      const nameWithPieces =
-        pieces && pieces > 0 ? `${finalName} (${pieces} pcs)` : finalName;
-
-      return {
-        ...prev,
-        [id]: {
-          ...base,
-          ...data,
-          id,
-          name: nameWithPieces,
-          qty: cur + 1,
-          price: Number(data.price ?? base.price ?? 0),
-          pieces,
-        },
-      };
-    });
+    return setQty(id, (items[id]?.qty || 0) + 1, data);
   };
 
-  /* --------------------------------------
-     DEC
-  -------------------------------------- */
+  /* DEC */
   const dec = (id: string) => {
     setItems((prev) => {
       const cur = prev[id]?.qty || 0;
-      const nextQty = cur - 1;
+      const nq = cur - 1;
       const next = { ...prev };
-      if (nextQty <= 0) delete next[id];
-      else next[id] = { ...next[id], qty: nextQty };
+      if (nq <= 0) delete next[id];
+      else next[id] = { ...next[id], qty: nq };
       return next;
     });
   };

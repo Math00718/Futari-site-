@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "./Navbar";
 import { CartProvider } from "./context/cartcontext";
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata = {
   title: "Futari – Traiteur Japonais et Coréen",
