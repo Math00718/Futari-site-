@@ -7,6 +7,8 @@ import {
   useState,
   ReactNode,
 } from "react";
+/* eslint-disable prefer-const */
+
 
 type CartItem = {
   id: string;
