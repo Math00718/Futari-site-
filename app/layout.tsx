@@ -4,7 +4,7 @@ import { CartProvider } from "./context/cartcontext";
 import { Analytics } from "@vercel/analytics/next"
 
 export const metadata = {
-  title: "Futari – Traiteur Japonais et Coréen",
+  title: "Futari – Traiteur Japonais",
   description:
     "Bienvenue chez Futari, traiteur japonais à Liège. Découvrez l’art du sushi à emporter — préparé avec passion et authenticité.",
 };
