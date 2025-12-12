@@ -185,7 +185,7 @@ export default function PanierPage() {
   }}
 >
   En cliquant sur « Commander par téléphone », vous appelez le restaurant afin de
-  confirmer votre commande.
+  leur lire votre commande.
   <br />
   La commande n’est pas envoyée automatiquement.
 </p>
