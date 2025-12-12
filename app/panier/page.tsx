@@ -175,6 +175,21 @@ export default function PanierPage() {
           <span>Total</span>
           <span>{totalPrice.toFixed(2)} €</span>
         </div>
+        <p
+  style={{
+    marginTop: 12,
+    fontSize: 13,
+    color: "#555",
+    lineHeight: 1.4,
+    textAlign: "center",
+  }}
+>
+  En cliquant sur « Commander par téléphone », vous appelez le restaurant afin de
+  confirmer votre commande.
+  <br />
+  La commande n’est pas envoyée automatiquement.
+</p>
+
 
         <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
           <a

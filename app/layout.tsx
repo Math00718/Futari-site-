@@ -6,7 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 export const metadata = {
   title: "Futari – Traiteur Japonais",
   description:
-    "Bienvenue chez Futari, traiteur japonais à Liège. Découvrez l’art du sushi à emporter — préparé avec passion et authenticité.",
+    "Bienvenue chez Futari, traiteur japonais. Découvrez l’art du sushi à emporter — préparé avec passion et authenticité.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
